@@ -1,6 +1,6 @@
 安装RealEvo-IDE,点击File->新建SylixOS base工程,设置参考文件2_RealEvoIDE使用手册第7-20页,IP可以照抄，开启simulator的虚拟机,将网络IP地址设置为相同地址
 2.1,2.2 参考文件4_SylixOS应用开发手册13.6.2代码,在/libsylixos/SylixOS/system/device/input/下有键盘输入信号的定义文件
-问题：1.在哪里捕捉执行？  /libsylixos/SylixOS/shell/ttinyShellReadline.c/__tshellCharTab row 771
+问题：1.在哪里捕捉执行？  /libsylixos/SylixOS/shell/ttinyShell/ttinyShellReadline.c/__tshellCharTab row 771
     查询已输入的指令是  
     					1.完整的func 展示args（可利用help的内容）
                         2.不完整的func 匹配（可利用help的内容）
