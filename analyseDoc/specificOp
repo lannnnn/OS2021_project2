@@ -1,0 +1,4 @@
+在/libsylixos/SylixOS/shell/ttinyShell/ttinyShellReadline.c/ row 771的__tshellCharTab函数中加入调用
+当前命令行的最后一个参数(指的是如foo bar mkd指令中的mkd)在 pcParamList[i] 中,其中i为此List的最大值,参考本文件839行
+API命名：
+太困了明天写（
