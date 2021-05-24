@@ -4,7 +4,7 @@
     查询已输入的指令是  
     					1.完整的func 展示args（可利用help的内容）
                         2.不完整的func 匹配（可利用help的内容）
-        2. 内置管道定义在/libsylixos/SylixOS/system/device/pipe/下，但是在代码中使用的函数，命令行的管道没有实现
+        2. 内置管道定义在/libsylixos/SylixOS/system/device/pipe/下，但是在代码中使用的函数，命令行的管道没有实现。应该需要先解决问题1如何捕捉，再加上|的捕捉
 2.3 实现find, grep, awk, sed指令
     找到Base工程下的/libsylixos/SylixOS/shell/ttinyShell目录,参考文件7_SylixOS shell用户手册第2页添加部分加入新的shell指令
 
