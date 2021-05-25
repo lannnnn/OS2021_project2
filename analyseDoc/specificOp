@@ -18,6 +18,8 @@
                __PTSHELL_KEYWORD       pskwNode[__HELP_BUFF_SIZE];`
 
 新建API：
-ULONG __tshellCmdMatch(pcCmd) //分析是否存在匹配的指令，返回值可设定为 
+ULONG __tshellCmdMatchFull(pcCmd) //分析是否存在完整的指令，返回值可设定为 
+                                    0：存在，-1：不存在，此返回值需要在函数中处理完成参数输出
+ULONG __tshellCmdMatchPart(pcCmd) //分析是否存在匹配的指令，返回值可设定为 
                                     typeA： 0：存在，-1：不存在，此返回值需要在函数中处理完成more
                                     typeB： 查询到的指令数量、目标指令列表，此返回值需要后续处理more输出
