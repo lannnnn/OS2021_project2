@@ -1,4 +1,23 @@
 在/libsylixos/SylixOS/shell/ttinyShell/ttinyShellReadline.c/ row 771的__tshellCharTab函数中加入调用
 当前命令行的最后一个参数(指的是如foo bar mkd指令中的mkd)在 pcParamList[i] 中,其中i为此List的最大值,参考本文件839行
-API命名：
-太困了明天写（
+需要添加的部分位于849行
+
+关于完整指令：
+    可利用/libsylixos/SylixOS/shell/ttinyShell/ttinyShellLib.c 1514行__tshellKeywordFind函数判断是否存在当前指令,
+    若存在即为完整func,不存在则检查匹配不完整func
+    函数将会从传入的参数二*ppskwNode中查找与参数一pcKeyword名字相同的指令,若查询成功,返回0,否则返回-1
+    若执行成功*ppskwNode将会指向目标结构体,参数列表存在于pskwNode->SK_pcFormatString中
+    `参考定义：__PTSHELL_KEYWORD   pskwNode = LW_NULL;`(意为从头开始)
+关于不完整指令：
+    /libsylixos/SylixOS/shell/ttinyShell/ttinyShellLib.c 下的 __tshellKeywordList函数可以将
+    从参数一pskwNodeStart开始的 一共参数三iMaxCounter个关键词 存入参数二ppskwNode数组中
+    若iMaxCounter>总参数量,函数结束,返回值为实际存入ppskwNode数组中的参数的`数量`
+    利用此函数可以获取全部的参数,keyword保存在结构体的pskwNode->SK_pcKeyword中,剩余工作为匹配和分页显示,可参考4. 不完整func的匹配
+    注意若执行到不完整func,需要检查最终输出结果是否存在,若无匹配项,则执行文件匹配
+    `参考定义： __PTSHELL_KEYWORD       pskwNodeStart = LW_NULL;
+               __PTSHELL_KEYWORD       pskwNode[__HELP_BUFF_SIZE];`
+
+新建API：
+ULONG __tshellCmdMatch(pcCmd) //分析是否存在匹配的指令，返回值可设定为 
+                                    typeA： 0：存在，-1：不存在，此返回值需要在函数中处理完成more
+                                    typeB： 查询到的指令数量、目标指令列表，此返回值需要后续处理more输出

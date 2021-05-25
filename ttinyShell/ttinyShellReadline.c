@@ -831,12 +831,12 @@ static VOID  __tshellCharTab (INT  iFd, __PSHELL_INPUT_CTX  psicContext)
             break;
         }
     }
-    
+
     pcDir = pcParamList[i];                                             /*  仅分析最后一个字段          */
     if (pcDir == LW_NULL) {
         return;
     }
-    
+
     if (lib_strlen(pcDir) == 0) {                                       /*  没有内容, 当前目录          */
         pcDir = ".";
         pcFileName = "";
@@ -844,12 +844,14 @@ static VOID  __tshellCharTab (INT  iFd, __PSHELL_INPUT_CTX  psicContext)
         return;
     }
     
-    pcFileName = lib_rindex(pcDir, PX_DIVIDER);
+    pcFileName = lib_rindex(pcDir, PX_DIVIDER);   // 参数分析，不存在/开头
     if (pcFileName == LW_NULL) {                                        /*  当前目录                    */
+        // 分析是否是完整指令，利用__tshellKeywordFind函数查询，若是，输出参数，return，否则继续
+        // 分析是否存在匹配指令，若是，通过more输出匹配项，return，否则继续
         pcFileName = pcDir;
         pcDir = ".";
 
-    } else {
+    } else {                                      // 参数分析，存在/开头
         if (pcFileName == pcDir) {                                      /*  根目录下第一级目录          */
             pcDir = PX_STR_DIVIDER;
             pcFileName++;

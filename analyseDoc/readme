@@ -8,20 +8,6 @@ TAB补全文件时,指令的优先级高于列出文件的优先级
       2. 关键字和参数的联想，可以调用/libsylixos/SylixOS/shell/ttinyShell/ttinyShellSysCmd.c/的函数
       3. 内置管道定义在/libsylixos/SylixOS/system/device/pipe/下，但是在代码中使用的函数，命令行的管道没有实现，需要在shellReadline捕捉的地方加上|的捕捉
       4. 不完整func的匹配:在筛选出参数后可学习/libsylixos/SylixOS/shell/ttinyShell/ttinyShellSysCmd.c 430行实现翻页
-    关于完整func：
-        可利用/libsylixos/SylixOS/shell/ttinyShell/ttinyShellLib.c 1514行__tshellKeywordFind函数判断是否存在当前指令,
-        若存在即为完整func,不存在则检查匹配不完整func
-        函数将会从传入的参数二*ppskwNode中查找与参数一pcKeyword名字相同的指令,若查询成功,返回0,否则返回-1
-        若执行成功*ppskwNode将会指向目标结构体,参数列表存在于pskwNode->SK_pcFormatString中
-        `参考定义：__PTSHELL_KEYWORD   pskwNode = LW_NULL;`(意为从头开始)
-    关于不完整func：
-        /libsylixos/SylixOS/shell/ttinyShell/ttinyShellLib.c 下的 __tshellKeywordList函数可以将
-        从参数一pskwNodeStart开始的 一共参数三iMaxCounter个关键词 存入参数二ppskwNode数组中
-        若iMaxCounter>总参数量,函数结束,返回值为实际存入ppskwNode数组中的参数的`数量`
-        利用此函数可以获取全部的参数,keyword保存在结构体的pskwNode->SK_pcKeyword中,剩余工作为匹配和分页显示,可参考4. 不完整func的匹配
-        注意若执行到不完整func,需要检查最终输出结果是否存在,若无匹配项,则执行文件匹配
-        `参考定义： __PTSHELL_KEYWORD       pskwNodeStart = LW_NULL;
-                   __PTSHELL_KEYWORD       pskwNode[__HELP_BUFF_SIZE];`
 2.3 实现find, grep, awk, sed指令
     找到Base工程下的/libsylixos/SylixOS/shell/ttinyShell目录,参考文件7_SylixOS shell用户手册第2页添加部分加入新的shell指令
 
