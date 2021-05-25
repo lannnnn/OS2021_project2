@@ -130,6 +130,7 @@ typedef __TSHELL_KEYWORD    *__PTSHELL_KEYWORD;                         /*  ÷∏’Î
 ULONG  __tshellKeywordAdd(CPCHAR  pcKeyword, size_t stStrLen, PCOMMAND_START_ROUTINE  pfuncCommand, 
                           ULONG   ulOption);
 ULONG  __tshellKeywordFind(CPCHAR  pcKeyword, __PTSHELL_KEYWORD   *ppskwNode);
+ULONG __tshellCmdMatchFull(CPCHAR  pcKeyword, __PTSHELL_KEYWORD   *ppskwNode);
 ULONG  __tshellKeywordList(__PTSHELL_KEYWORD   pskwNodeStart,
                            __PTSHELL_KEYWORD   ppskwNode[],
                            INT                 iMaxCounter);

@@ -1545,6 +1545,51 @@ ULONG  __tshellKeywordFind (CPCHAR  pcKeyword, __PTSHELL_KEYWORD   *ppskwNode)
     
     return  (ERROR_NONE);
 }
+
+/*********************************************************************************************************
+** 函数名称: __tshellCmdMatchFull
+** 功能描述: 在 ttiny shell 系统查找一个关键字，如果存在则输出参数列表.
+** 输　入  : pcKeyword     关键字
+**           ppskwNode     关键字节点双指针
+** 输　出  : 0: 表示执行成功 -1: 表示执行失败
+** 全局变量:
+** 调用模块:
+*********************************************************************************************************/
+ULONG __tshellCmdMatchFull(CPCHAR  pcKeyword, __PTSHELL_KEYWORD   *ppskwNode) {
+    REGISTER PLW_LIST_LINE        plineHash;
+    REGISTER __PTSHELL_KEYWORD    pskwNode = LW_NULL;                   /*  关键字节点                  */
+    REGISTER INT                  iHashVal;
+
+    iHashVal = __hashHorner(pcKeyword, LW_CFG_SHELL_KEY_HASH_SIZE);     /*  确定一阶散列的位置          */
+
+    __TTINY_SHELL_LOCK();                                               /*  互斥访问                    */
+    plineHash = _G_plineTSKeyHeaderHashTbl[iHashVal];
+    for (;
+         plineHash != LW_NULL;
+         plineHash  = _list_line_get_next(plineHash)) {
+
+        pskwNode = _LIST_ENTRY(plineHash, __TSHELL_KEYWORD,
+                               SK_lineHash);                            /*  获得控制块                  */
+
+        if (lib_strcmp(pcKeyword, pskwNode->SK_pcKeyword) == 0) {       /*  关键字相同                  */
+            break;
+        }
+    }
+
+    if (plineHash == LW_NULL) {
+        __TTINY_SHELL_UNLOCK();                                         /*  释放资源                    */
+        _ErrorHandle(ERROR_TSHELL_EKEYWORD);
+        return  (ERROR_TSHELL_EKEYWORD);                                /*  没有找到关键字              */
+    }
+
+    *ppskwNode = pskwNode;
+
+    __TTINY_SHELL_UNLOCK();                                             /*  释放资源                    */
+
+    printf("%-15s \n", pskwNode->SK_pcFormatString);
+
+    return  (ERROR_NONE);
+}
 /*********************************************************************************************************
 ** 函数名称: __tshellKeywordList
 ** 功能描述: 获得链表中的所有关键字控制块地址

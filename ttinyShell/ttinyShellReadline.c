@@ -785,6 +785,8 @@ static VOID  __tshellCharTab (INT  iFd, __PSHELL_INPUT_CTX  psicContext)
              PCHAR       pcFileName;
     REGISTER ULONG       ulError;
     
+             __PTSHELL_KEYWORD       pskwNodeStart = LW_NULL;
+
     if (CTX_CURSOR < CTX_TOTAL) {                                       /*  将光标移动到行末            */
         __tshellTtyCursorMoveRight(iFd, CTX_TOTAL - CTX_CURSOR);
         CTX_CURSOR = CTX_TOTAL;
@@ -847,6 +849,9 @@ static VOID  __tshellCharTab (INT  iFd, __PSHELL_INPUT_CTX  psicContext)
     pcFileName = lib_rindex(pcDir, PX_DIVIDER);   // 参数分析，不存在/开头
     if (pcFileName == LW_NULL) {                                        /*  当前目录                    */
         // 分析是否是完整指令，利用__tshellKeywordFind函数查询，若是，输出参数，return，否则继续
+        if (__tshellCmdMatchFull(pcDir, &pskwNodeStart) == 0) {
+            return;
+        }
         // 分析是否存在匹配指令，若是，通过more输出匹配项，return，否则继续
         pcFileName = pcDir;
         pcDir = ".";
