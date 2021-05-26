@@ -6,8 +6,8 @@ TAB补全文件时,指令的优先级高于列出文件的优先级
     	1.完整的func 展示args（可利用help的内容）
         2.不完整的func 匹配（可利用help的内容）
       2. 关键字和参数的联想，可以调用/libsylixos/SylixOS/shell/ttinyShell/ttinyShellSysCmd.c/的函数
-      3. 内置管道定义在/libsylixos/SylixOS/system/device/pipe/下，但是在代码中使用的函数，命令行的管道没有实现，需要在shellReadline捕捉的地方加上|的捕捉
-      4. 不完整func的匹配:在筛选出参数后可学习/libsylixos/SylixOS/shell/ttinyShell/ttinyShellSysCmd.c 430行实现翻页
+      4. 不完整func的匹配:在筛选出参数后可学习/libsylixos/SylixOS/shell/ttinyShell/ttinyShellSysCmd.c 430
 2.3 实现find, grep, awk, sed指令
     找到Base工程下的/libsylixos/SylixOS/shell/ttinyShell目录,参考文件7_SylixOS shell用户手册第2页添加部分加入新的shell指令
+ 	3. 内置管道定义在/libsylixos/SylixOS/system/device/pipe/下，但是在代码中使用的函数，命令行的管道没有实现，需要在shellReadline捕捉的地方加上|的捕捉
 

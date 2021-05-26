@@ -1555,38 +1555,28 @@ ULONG  __tshellKeywordFind (CPCHAR  pcKeyword, __PTSHELL_KEYWORD   *ppskwNode)
 ** 全局变量:
 ** 调用模块:
 *********************************************************************************************************/
-ULONG __tshellCmdMatchFull(CPCHAR  pcKeyword, __PTSHELL_KEYWORD   *ppskwNode) {
-    REGISTER PLW_LIST_LINE        plineHash;
-    REGISTER __PTSHELL_KEYWORD    pskwNode = LW_NULL;                   /*  关键字节点                  */
-    REGISTER INT                  iHashVal;
+ULONG __tshellCmdMatchFull(INT iFd, CPCHAR  pcKeyword, __PTSHELL_KEYWORD   *ppskwNode) {
+    __PTSHELL_KEYWORD   pskwNode = LW_NULL;
+    CHAR     cStat[MAX_FILENAME_LENGTH];
+    size_t   stCatLen;
 
-    iHashVal = __hashHorner(pcKeyword, LW_CFG_SHELL_KEY_HASH_SIZE);     /*  确定一阶散列的位置          */
-
-    __TTINY_SHELL_LOCK();                                               /*  互斥访问                    */
-    plineHash = _G_plineTSKeyHeaderHashTbl[iHashVal];
-    for (;
-         plineHash != LW_NULL;
-         plineHash  = _list_line_get_next(plineHash)) {
-
-        pskwNode = _LIST_ENTRY(plineHash, __TSHELL_KEYWORD,
-                               SK_lineHash);                            /*  获得控制块                  */
-
-        if (lib_strcmp(pcKeyword, pskwNode->SK_pcKeyword) == 0) {       /*  关键字相同                  */
-            break;
-        }
+    if(__tshellKeywordFind(pcKeyword, &pskwNode) != ERROR_NONE) {
+        return -1;
     }
 
-    if (plineHash == LW_NULL) {
-        __TTINY_SHELL_UNLOCK();                                         /*  释放资源                    */
-        _ErrorHandle(ERROR_TSHELL_EKEYWORD);
-        return  (ERROR_TSHELL_EKEYWORD);                                /*  没有找到关键字              */
-    }
+    printf("\n");
+    API_TShellColorStart2(LW_TSHELL_COLOR_LIGHT_BLUE, STD_OUT);
+    snprintf(cStat, MAX_FILENAME_LENGTH, "%s use: %s %-15s", pcKeyword, pcKeyword, pskwNode->SK_pcFormatString);
+    stCatLen = lib_strlen(cStat);
+    write(iFd, cStat, stCatLen);
+    printf("\n");
+    API_TShellColorEnd(STD_OUT);
 
-    *ppskwNode = pskwNode;
+    __tshellShowPrompt();    // 结束stdout，切换新的命令行提示符
 
-    __TTINY_SHELL_UNLOCK();                                             /*  释放资源                    */
-
-    printf("%-15s \n", pskwNode->SK_pcFormatString);
+    snprintf(cStat, MAX_FILENAME_LENGTH, "%s", pcKeyword);
+    stCatLen = lib_strlen(cStat);
+    write(iFd, cStat, stCatLen);
 
     return  (ERROR_NONE);
 }
