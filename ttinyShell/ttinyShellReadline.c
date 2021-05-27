@@ -852,6 +852,11 @@ static VOID  __tshellCharTab (INT  iFd, __PSHELL_INPUT_CTX  psicContext)
         // 分析是否是完整指令，利用__tshellKeywordFind函数查询，若是，输出参数，return，否则继续
         pcKey = pcDir; // 复制pcDir避免函数修改内容造成内存泄漏
         if (__tshellCmdMatchFull(iFd ,pcKey, &pskwNodeStart) == ERROR_NONE) {
+            CHAR     cStat[MAX_FILENAME_LENGTH];
+            size_t   stCatLen;
+            snprintf(cStat, MAX_FILENAME_LENGTH, "%s", pcCmd);
+            stCatLen = lib_strlen(cStat);
+            write(iFd, cStat, stCatLen);    // 恢复原本命令行
             return;
         }
         // 分析是否存在匹配指令，若是，通过more输出匹配项，return，否则继续

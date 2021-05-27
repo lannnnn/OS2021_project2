@@ -1574,10 +1574,6 @@ ULONG __tshellCmdMatchFull(INT iFd, CPCHAR  pcKeyword, __PTSHELL_KEYWORD   *ppsk
 
     __tshellShowPrompt();    // 结束stdout，切换新的命令行提示符
 
-    snprintf(cStat, MAX_FILENAME_LENGTH, "%s", pcKeyword);
-    stCatLen = lib_strlen(cStat);
-    write(iFd, cStat, stCatLen);
-
     return  (ERROR_NONE);
 }
 /*********************************************************************************************************
