@@ -2976,9 +2976,9 @@ VOID  __tshellFsCmdInit (VOID)
     API_TShellFormatAdd("find", " path [operation] [content]");
     API_TShellHelpAdd("find", "find file(s) according to specific requirements in current path\n"
                             "find file(s) contain similar name\n"
-                            "    eg. sed . -name file name\n"
+                            "    eg. find . -name file name\n"
                             "find file(s) of specific type\n"
-                            "    eg. sed . -type f\n"
+                            "    eg. find . -type f\n"
                             "         complete the contents:\n"
                             "              d for directory file\n"
                             "              c for char file\n"
@@ -2987,7 +2987,7 @@ VOID  __tshellFsCmdInit (VOID)
                             "              l for link file\n"
                             "              s for socket file\n"
                             "find file(s) of specific size of Bytes\n"
-                            "    eg. sed . -size 100\n");
+                            "    eg. find . -size 100\n");
 
     API_TShellKeywordAdd("cp", __tshellFsCmdCp);
     API_TShellFormatAdd("cp", " src file name dst file name");
