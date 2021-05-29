@@ -131,6 +131,7 @@ ULONG  __tshellKeywordAdd(CPCHAR  pcKeyword, size_t stStrLen, PCOMMAND_START_ROU
                           ULONG   ulOption);
 ULONG  __tshellKeywordFind(CPCHAR  pcKeyword, __PTSHELL_KEYWORD   *ppskwNode);
 ULONG  __tshellCmdMatchFull(INT iFd, CPCHAR  pcKeyword, __PTSHELL_KEYWORD   *ppskwNode);
+ULONG  __tshellCmdMatchPart(INT iFd, CPCHAR  pcKey, __PTSHELL_KEYWORD pskwNode[]);
 ULONG  __tshellKeywordList(__PTSHELL_KEYWORD   pskwNodeStart,
                            __PTSHELL_KEYWORD   ppskwNode[],
                            INT                 iMaxCounter);

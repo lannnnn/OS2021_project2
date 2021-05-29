@@ -848,31 +848,7 @@ static VOID  __tshellCharTab (INT  iFd, __PSHELL_INPUT_CTX  psicContext)
         __tshellFileMatch(iFd, pcDir, pcFileName, psicContext);         /*  显示目录下指定匹配的文件    */
         return;
     }
-    
-INT  __helpPrint (__PTSHELL_KEYWORD  pskwNode, BOOL  bDetails)
-    {
-        INT   iChars = 0;
 
-        if (bDetails && pskwNode->SK_pcHelpString) {
-            iChars += fprintf(stderr, "%s", pskwNode->SK_pcHelpString);              /*  打印帮助信息                */
-        }
-
-        if (bDetails) {
-            iChars += fprintf(stderr, "%s", pskwNode->SK_pcKeyword);                 /*  打印关键字队列              */
-        } else {
-            iChars += fprintf(stderr, "%-20s", pskwNode->SK_pcKeyword);
-        }
-
-        if (pskwNode->SK_pcFormatString) {
-            API_TShellColorStart2(LW_TSHELL_COLOR_GREEN, STD_OUT);
-            iChars += printf("%s", pskwNode->SK_pcFormatString);            /*  打印格式信息                */
-            API_TShellColorEnd(STD_OUT);
-        }
-
-        printf("\n");
-
-        return  (iChars);
-}
     pcKey = pcDir;
 
     pcFileName = lib_rindex(pcDir, PX_DIVIDER);   // 参数分析，不存在/开头
@@ -887,11 +863,11 @@ INT  __helpPrint (__PTSHELL_KEYWORD  pskwNode, BOOL  bDetails)
             write(iFd, cStat, stCatLen);    // 恢复原本命令行
             return;
         } else {
+            // 分析是否存在匹配指令，若是，通过more输出匹配项，return，否则继续
             __PTSHELL_KEYWORD  pskwNode[1000];
-            __tshellCmdMatchPart(iFd, pcKey, pskwNode);
+            i = __tshellCmdMatchPart(iFd, pcKey, pskwNode);
+            if(i == ERROR_NONE) return;
         }
-
-        // 分析是否存在匹配指令，若是，通过more输出匹配项，return，否则继续
         pcFileName = pcDir;
         pcDir = ".";
     } else {                                      // 参数分析，存在/开头
