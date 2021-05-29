@@ -77,6 +77,7 @@
 #include "../SylixOS/shell/ttinyShell/ttinyShell.h"
 #include "../SylixOS/shell/ttinyShell/ttinyShellLib.h"
 #include "../SylixOS/shell/ttinyShell/ttinyShellSysCmd.h"
+#include "../SylixOS/shell/ttinyShell/ttinyShellReadline.h"
 #include "../SylixOS/shell/ttinyVar/ttinyVarLib.h"
 #include "../SylixOS/fs/include/fs_fs.h"
 #if LW_CFG_POSIX_EN > 0
@@ -87,6 +88,30 @@
 *********************************************************************************************************/
 static INT      __tshellFsCmdCp(INT  iArgC, PCHAR  ppcArgV[]);
 LW_API time_t   API_RootFsTime(time_t  *time);
+/*********************************************************************************************************
+** 函数名称: __similarLen
+** 功能描述: 从左侧开始查询两个字符串相似的字符数
+** 输　入  : pcStr1     字符串1
+**           pcStr2     字符串2
+** 输　出  : 相似的个数
+** 全局变量:
+** 调用模块:
+*********************************************************************************************************/
+static size_t  __similarLen (CPCHAR  pcStr1, CPCHAR  pcStr2)
+{
+    size_t  stSimilar = 0;
+
+    while (*pcStr1 == *pcStr2) {
+        if (*pcStr1 == PX_EOS) {
+            break;
+        }
+        pcStr1++;
+        pcStr2++;
+        stSimilar++;
+    }
+
+    return  (stSimilar);
+}
 /*********************************************************************************************************
 ** 函数名称: __tshellFsCmdCd
 ** 功能描述: 系统命令 "cd"
@@ -1636,7 +1661,7 @@ static INT  __tshellFsCmdLl (INT  iArgC, PCHAR  ppcArgV[])
             }
         }
         
-        stDirLen = lib_strlen(cDirName);
+        stDirLen = lib_strlen(cDirName);         //或许dir长度
         pdir     = opendir(cDirName);
         if (stDirLen > 0) {
             if (cDirName[stDirLen - 1] != PX_DIVIDER) {                 /*  参数目录不是以 / 结尾       */
@@ -1700,6 +1725,212 @@ __display_over:
     printf("      total items: %d\n", iItemNum);
     
     return  (ERROR_NONE);
+}
+/*********************************************************************************************************
+** 函数名称: __tshellFsCmdFind
+** 功能描述: 系统命令 "find"
+** 输　入  : iArgC         参数个数
+**           ppcArgV       参数表
+** 输　出  : 0
+** 全局变量:
+** 调用模块:
+*********************************************************************************************************/
+static INT  __tshellFsCmdFind (INT  iArgC, PCHAR  ppcArgV[])
+{
+    PCHAR           pcStat;
+                CHAR            cDirName[MAX_FILENAME_LENGTH] = ".";
+                CHAR            FileName[MAX_FILENAME_LENGTH] ;
+                CHAR            FileType[MAX_FILENAME_LENGTH] = "f";
+                CHAR            Sizetemp[MAX_FILENAME_LENGTH] = "-1";
+                CHAR            Option[10] ;
+                size_t          FileLen  = 1;
+                size_t          stSimilar;
+                size_t          Filesize=-1;
+                size_t          Size=-1;
+       REGISTER DIR            *pdir;
+       REGISTER struct dirent  *pdirent;
+                struct stat     statGet;
+                INT             iError;
+                INT             iItemNum = 0;
+
+        if (iArgC != 2 && iArgC != 3 && iArgC != 4) {
+             fprintf(stderr, "arguments error!\n");
+             return  (-ERROR_TSHELL_EPARAM);
+        }
+        lib_strcpy(cDirName, ppcArgV[1]);
+        lib_strcpy(Option, ppcArgV[2]);
+        if(!lib_strcmp(Option, "-name")){
+            goto    __find_file;
+        }else if(!lib_strcmp(Option, "-type")){
+            goto    __find_type;
+        }else if(!lib_strcmp(Option, "-size")){
+            goto    __find_size;
+        }else{
+            goto    __display_over;
+        }
+__find_file:                               //直接查找文件
+        lib_strcpy(FileName, ppcArgV[3]);
+        FileLen = lib_strlen(FileName);         //获取file长度
+        pdir = opendir(cDirName);
+
+        if (!pdir) {
+            if (errno == EACCES) {
+                fprintf(stderr, "insufficient permissions.\n");
+            } else {
+                fprintf(stderr, "can not open dir %s!\n", lib_strerror(errno));
+            }
+            return  (PX_ERROR);
+        }
+
+        do {
+              pdirent = readdir(pdir);
+              if (!pdirent) {
+                  break;
+
+              } else {
+                      pcStat = pdirent->d_name;
+                      iError = lstat(pdirent->d_name, &statGet);              /*  使用当前目录                */
+                  if (iError < 0) {                                           /*  设备文件默认使用下面的属性  */
+                      statGet.st_dev     = 0;
+                      statGet.st_ino     = 0;
+                      statGet.st_mode    = 0666 | S_IFCHR;                    /*  默认属性                    */
+                      statGet.st_nlink   = 0;
+                      statGet.st_uid     = 0;
+                      statGet.st_gid     = 0;
+                      statGet.st_rdev    = 1;
+                      statGet.st_size    = 0;
+                      statGet.st_blksize = 0;
+                      statGet.st_blocks  = 0;
+                      statGet.st_atime   = API_RootFsTime(LW_NULL);           /*  默认使用 root fs 基准时间   */
+                      statGet.st_mtime   = API_RootFsTime(LW_NULL);
+                      statGet.st_ctime   = API_RootFsTime(LW_NULL);
+                  }
+                  stSimilar = __similarLen(FileName, pdirent->d_name);
+                  if(stSimilar == FileLen){
+                      __tshellFsShowFile(pdirent->d_name, pcStat, &statGet);
+                      iItemNum++;
+                  }
+              }
+          } while (1);
+
+          closedir(pdir);
+          goto __display_over;
+__find_type:                                       //根据type进行查找
+           lib_strcpy(FileType, ppcArgV[3]);
+           pdir = opendir(cDirName);
+           if (!pdir) {
+               if (errno == EACCES) {
+                   fprintf(stderr, "insufficient permissions.\n");
+               } else {
+                   fprintf(stderr, "can not open dir %s!\n", lib_strerror(errno));
+               }
+               return  (PX_ERROR);
+           }
+
+           do {
+                 pdirent = readdir(pdir);
+                 if (!pdirent) {
+                     break;
+
+                 } else {
+                         pcStat = pdirent->d_name;
+                         iError = lstat(pdirent->d_name, &statGet);              /*  使用当前目录                */
+                     if (iError < 0) {                                           /*  设备文件默认使用下面的属性  */
+                         statGet.st_dev     = 0;
+                         statGet.st_ino     = 0;
+                         statGet.st_mode    = 0666 | S_IFCHR;                    /*  默认属性                    */
+                         statGet.st_nlink   = 0;
+                         statGet.st_uid     = 0;
+                         statGet.st_gid     = 0;
+                         statGet.st_rdev    = 1;
+                         statGet.st_size    = 0;
+                         statGet.st_blksize = 0;
+                         statGet.st_blocks  = 0;
+                         statGet.st_atime   = API_RootFsTime(LW_NULL);           /*  默认使用 root fs 基准时间   */
+                         statGet.st_mtime   = API_RootFsTime(LW_NULL);
+                         statGet.st_ctime   = API_RootFsTime(LW_NULL);
+                     }
+                      if (S_ISDIR(statGet.st_mode) && (!lib_strcmp(FileType, "d"))) {
+                          __tshellFsShowFile(pdirent->d_name, pcStat, &statGet);
+                          iItemNum++;
+                      }
+                      if (S_ISCHR(statGet.st_mode)&& (!lib_strcmp(FileType, "c"))) {
+                          __tshellFsShowFile(pdirent->d_name, pcStat, &statGet);
+                          iItemNum++;
+                      }
+                      if (S_ISBLK(statGet.st_mode)&& (!lib_strcmp(FileType, "b"))) {
+                          __tshellFsShowFile(pdirent->d_name, pcStat, &statGet);
+                          iItemNum++;
+                      }
+                      if (S_ISREG(statGet.st_mode)&& (!lib_strcmp(FileType, "f"))) {
+                          __tshellFsShowFile(pdirent->d_name, pcStat, &statGet);
+                          iItemNum++;
+                      }
+                      if (S_ISLNK(statGet.st_mode)&& (!lib_strcmp(FileType, "l"))) {
+                          __tshellFsShowFile(pdirent->d_name, pcStat, &statGet);
+                          iItemNum++;
+                      }
+                      if (S_ISSOCK(statGet.st_mode)&& (!lib_strcmp(FileType, "s"))) {
+                          __tshellFsShowFile(pdirent->d_name, pcStat, &statGet);
+                          iItemNum++;
+                      }
+
+                 }
+             } while (1);
+
+             closedir(pdir);
+             goto __display_over;
+__find_size:                                 //根据size
+            lib_strcpy(Sizetemp, ppcArgV[3]);
+            sscanf(Sizetemp,"%d",&Size);
+            pdir = opendir(cDirName);
+
+            if (!pdir) {
+                if (errno == EACCES) {
+                    fprintf(stderr, "insufficient permissions.\n");
+                } else {
+                    fprintf(stderr, "can not open dir %s!\n", lib_strerror(errno));
+                }
+                return  (PX_ERROR);
+            }
+
+            do {
+                  pdirent = readdir(pdir);
+                  if (!pdirent) {
+                      break;
+
+                  } else {
+                          pcStat = pdirent->d_name;
+                          iError = lstat(pdirent->d_name, &statGet);              /*  使用当前目录                */
+                      if (iError < 0) {                                           /*  设备文件默认使用下面的属性  */
+                          statGet.st_dev     = 0;
+                          statGet.st_ino     = 0;
+                          statGet.st_mode    = 0666 | S_IFCHR;                    /*  默认属性                    */
+                          statGet.st_nlink   = 0;
+                          statGet.st_uid     = 0;
+                          statGet.st_gid     = 0;
+                          statGet.st_rdev    = 1;
+                          statGet.st_size    = 0;
+                          statGet.st_blksize = 0;
+                          statGet.st_blocks  = 0;
+                          statGet.st_atime   = API_RootFsTime(LW_NULL);           /*  默认使用 root fs 基准时间   */
+                          statGet.st_mtime   = API_RootFsTime(LW_NULL);
+                          statGet.st_ctime   = API_RootFsTime(LW_NULL);
+                      }
+                          Filesize= (size_t)(statGet.st_size);
+                          if(Filesize==Size){
+                               __tshellFsShowFile(pdirent->d_name, pcStat, &statGet);
+                          }
+                          iItemNum++;
+                  }
+              } while (1);
+
+              closedir(pdir);
+             goto __display_over;
+__display_over:
+          printf("      total items: %d\n", iItemNum);
+
+          return  (ERROR_NONE);
 }
 /*********************************************************************************************************
 ** 函数名称: __getDsize
@@ -2740,6 +2971,10 @@ VOID  __tshellFsCmdInit (VOID)
                     "       d for delete the whole line\n"
                     "       c for replace the whole line\n"
                     "       p and s still under develope...\n");
+
+    API_TShellKeywordAdd("find", __tshellFsCmdFind);
+    API_TShellFormatAdd("find", " [file name]");
+    API_TShellHelpAdd("find", "find file(s) in current path\n");
 
     API_TShellKeywordAdd("cp", __tshellFsCmdCp);
     API_TShellFormatAdd("cp", " src file name dst file name");
