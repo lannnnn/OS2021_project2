@@ -1920,8 +1920,8 @@ __find_size:                                 //¸ù¾Ýsize
                           Filesize= (size_t)(statGet.st_size);
                           if(Filesize==Size){
                                __tshellFsShowFile(pdirent->d_name, pcStat, &statGet);
+                               iItemNum++;
                           }
-                          iItemNum++;
                   }
               } while (1);
 
