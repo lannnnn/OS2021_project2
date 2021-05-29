@@ -1,82 +1,82 @@
 /*********************************************************************************************************
 **
-**                                    ÖĞ¹úÈí¼ş¿ªÔ´×éÖ¯
+**                                    ä¸­å›½è½¯ä»¶å¼€æºç»„ç»‡
 **
-**                                   Ç¶ÈëÊ½ÊµÊ±²Ù×÷ÏµÍ³
+**                                   åµŒå…¥å¼å®æ—¶æ“ä½œç³»ç»Ÿ
 **
 **                                SylixOS(TM)  LW : long wing
 **
 **                               Copyright All Rights Reserved
 **
-**--------------ÎÄ¼şĞÅÏ¢--------------------------------------------------------------------------------
+**--------------æ–‡ä»¶ä¿¡æ¯--------------------------------------------------------------------------------
 **
-** ÎÄ   ¼ş   Ãû: ttinyShellLib.c
+** æ–‡   ä»¶   å: ttinyShellLib.c
 **
-** ´´   ½¨   ÈË: Han.Hui (º«»Ô)
+** åˆ›   å»º   äºº: Han.Hui (éŸ©è¾‰)
 **
-** ÎÄ¼ş´´½¨ÈÕÆÚ: 2008 Äê 07 ÔÂ 27 ÈÕ
+** æ–‡ä»¶åˆ›å»ºæ—¥æœŸ: 2008 å¹´ 07 æœˆ 27 æ—¥
 **
-** Ãè        Êö: Ò»¸ö³¬Ğ¡ĞÍµÄ shell ÏµÍ³, Ê¹ÓÃ tty/pty ×ö½Ó¿Ú, Ö÷ÒªÓÃÓÚµ÷ÊÔÓë¼òµ¥½»»¥.
+** æ        è¿°: ä¸€ä¸ªè¶…å°å‹çš„ shell ç³»ç»Ÿ, ä½¿ç”¨ tty/pty åšæ¥å£, ä¸»è¦ç”¨äºè°ƒè¯•ä¸ç®€å•äº¤äº’.
 
 ** BUG
-2008.10.20  ½ñÌìÊÇÎ¢ÈíÏòµÁ°æÈí¼şĞûÕ½ÖØÒªµÄÈÕ×Ó, ĞÄÇéÊ®·Ö¸´ÔÓ... 
-            shell ÏµÍ³Ö§³Ö±³¾°ÔËĞĞÄÜÁ¦.
-2008.12.24  ½ñÌìÊÇÊ¥µ®Ç°Ò¹, ×£ÎÒ×Ô¼ºÊ¥µ®¿ìÀÖ, ºÇºÇ! ĞŞ¸ÄÁËÃüÁîÌáÊ¾·û.
-2009.02.09  ĞŞ¸Ä shell Ò»´¦Ğ¡ BUG.
-2009.02.13  dup2 ²úÉúµÄ fd ĞèÒª¹Ø±Õ.
-2009.02.19  ½«ÃüÁîÌáÊ¾·ûĞŞ¸ÄÎªÓë linux bash ÀàËÆ.
-2009.02.23  ¼ÓÈë join ±³¾°ÔËĞĞµÄ·ûºÅ.
-2009.03.10  ÖÕ¶ËÆô¶¯Ê±ĞŞ¸ÄÖÕ¶Ë´°¿ÚµÄ±êÌâ.
-2009.03.24  µ±Ê¹ÓÃÃüÁîÁ¬×Ö·û, ÏÂ·½´òÓ¡ > ÌáÊ¾.
-2009.03.25  ÔÚµ÷ÓÃ shell exec Ç°¼ÓÈë¶Ô optind ºÍ optreset µÄ²Ù×÷, È·±£ getopt µÄÕıÈ·ĞÔ.
-            ±³¾°Ïß³Ì²»ĞèÒª, ÔÚ³õÊ¼»¯ getopt Ïß³ÌÉÏÏÂÎÄÊ±, ÒÑ¾­¸³ÁË³õÖµ.
-2009.04.13  ±³¾°Ïß³Ì¼ÓÈëÇå³ıº¯ÊıÈëÕ», ·ÀÖ¹ÄÚ²¿·şÎñº¯Êıµ÷ÓÃ exit Ö±½ÓÍË³ö, µ¼ÖÂÎŞ·¨ÊÍ·Å»º´æÔì³ÉÄÚ´æĞ¹Â¶.
-2009.05.22  ¼ÓÈëÓÃ»§ÈÏÖ¤¹¦ÄÜ.
-2009.05.28  ¼ÓÈëÁË shell ÖØÆôµÄ¹¦ÄÜ.
-2009.06.30  Æô¶¯ shell Ê±²»´òÓ¡ tty ÖÕ¶ËÃû.
-            ÃüÁîÌáÊ¾·ûÏÔÊ¾È«²¿µ±Ç°Â·¾¶.
-2009.07.13  Ö§³Ö LW_OPTION_TSHELL_NOECHO ´´½¨ shell Ïß³Ì.
-2009.08.04  __tshellKeywordAdd() ¼ÓÈëÑ¡Ïî²ÎÊı.
-            __tshellExec() Ö§³Ö¹Ø¼ü×ÖÑ¡Ïî¹¦ÄÜ.
-2009.10.28  __tshellExec() Ö±½ÓºöÂÔ×¢ÊÍĞĞ.
-2009.11.21  shell Ïß³Ì(»òÆäÑÜÉú³öµÄ±³¾°Ïß³Ì)Ê¹ÓÃË½ÓĞµÄ io »·¾³. ÆäÑÜÉúÏß³Ì½«¼Ì³Ğ¸¸ÏµÏß³ÌµÄ io »·¾³.
-2010.05.06  ¼ÓÈë undef ½Ó¿ÚµÄ²Ù×÷.
-2010.12.27  ½â¾ö __tshellExec Ö´ĞĞµÄ±äÁ¿¸³ÖµÓï¾ä³¤¶È´óÓÚ×î´ó¹Ø¼ü×Ö³¤¶ÈÊ±, ³öÏÖµÄ¸³Öµ´íÎó bug. 
-2011.03.10  ¼ÓÈëÏµÍ³ÖØ¶¨ÏòÊä³ö¹¦ÄÜ.
-            Ê¹ÓÃĞÂµÄ±£´æ±ê×¼ÎÄ¼şÃèÊö·ûµÄ·½·¨.
-2011.04.23  ÖØ¶¨ÏòÊ±, ĞèÒªĞŞÕı²ÎÊıÁĞ±í.
-2011.05.19  ĞŞÕı __tshellExec() µ÷ÓÃ pfuncHook Ê±µÄ²ÎÊıÇ°ÓĞ·ûºÅ´íÎó.
-2011.06.23  Ê¹ÓÃĞÂµÄÉ«²Ê×ªÒå.
-2011.06.24  Ê¹ÓÃĞÂµÄ±³¾°ÔËĞĞËã·¨, ÓÉ __tshellExec() ÅĞ¶ÏÃüÁîĞĞÊÇ·ñĞèÒª±³¾°Ö´ĞĞ.
-2011.07.27  shell ±³¾°Ïß³ÌÊ¹ÓÃËõ¶ÌÃüÁîÃû×÷ÎªÏß³ÌÃû.
-2011.08.06  shell ±³¾°Í¬²½Ö´ĞĞÍê±ÏÊ±, ĞèÒª·µ»ØÃüÁî·µ»ØÖµ, shell Ö÷ÈÎÎñÒ²ÒªÉèÖÃÏàÓ¦µÄ·µ»ØÖµ.
-2012.03.25  shell undef ´¦ÀíĞ´Èë´ËÎÄ¼ş, Í¬Ê± shell ¶ÁÈ¡²»ÔÙÊ¹ÓÃ read ¶øÊÇÓÃÒ»¸ö×¨ÓÃº¯Êı, Õâ¸öº¯Êı½«ÊµÏÖÒ»
-            Ğ©Ò×ÓÃĞÔ²Ù×÷, ÀıÈçÀúÊ·ÃüÁî, ÃüÁîËæÒâÎ»ÖÃĞŞ¸ÄµÈµÈ.
-2012.03.25  __tshellReadline() ÄÚ²¿ÒÑ¾­´¦ÀíÁË \n, shell ÈÎÎñ²»ĞèÒªÔÙ´Î´¦Àí.
-2012.03.27  Ã¿Ò»¸ö shell ÊäÈë¶¼ÒªÅĞ¶ÏÇ¿ÖÆÍË³öÃüÁî.
-2012.03.30  ´´½¨±³¾°Ö´ĞĞÏß³ÌÊ¹ÓÃ API_ThreadStartEx() ½øĞĞ join Ô­×Ó²Ù×÷.
-2012.08.25  ¼ÓÈë __tshellBgCreateEx() Ìá¹©À©Õ¹ÎÄ¼şÃèÊö·ûµÄ¹¦ÄÜ.
-2012.11.09  __tshellRestart() ÄÚ²¿ĞèÒªÑÏ¸ñÅĞ¶Ï¾ä±úÊÇ·ñÓĞĞ§.
-2012.12.07  ÖØĞÂÉè¼Æ shell Ö´ĞĞ±³¾°³ÌĞòµÄ·½Ê½, ·ÀÖ¹¶ş´Î±³¾°Ö´ĞĞÔì³ÉµÄÀË·Ñ.
-2012.12.24  shell Ö§³ÖÍË³öÇå³ıÎÄ¼ş¹¦ÄÜ.
-2012.12.25  __tshellBgCreateEx() ½«×ÔÉí·µ»ØÖµºÍÃüÁî·µ»ØÖµ¸ôÀë¿ª.
-2013.01.23  shell µ±ÏµÍ³ÃüÁîºÍ¿ÉÖ´ĞĞÎÄ¼şÃûÖØ¸´Ê±, ÓÅÏÈÔËĞĞÎÄ¼ş. 
-2014.07.23  shell ¼ÓÈë±ê×¼ÎÄ¼şÖØ¶¨ÏòÖ§³Ö.
-2014.08.27  __tshellRestart() Èç¹ûÅĞ¶ÏÊÇÔÚµÈ´ıÆäËûÈÎÎñ, ÔòÊ¹ÓÃ kill ²Ù×÷.
-2014.04.17  ¶ÔÖØ¶¨ÏòÃèÊö·ûµÄ»ØÊÕĞèÒªÔÚÄÚºË IO »·¾³ÖĞÖĞ½øĞĞ.
-2017.07.19  Ö´ĞĞÍêÃ¿ÌõÃüÁîºóÊ¹ÓÃ fpurge(stdin) Çå³ıÊäÈë»º´æ.
-2018.12.13  ÓĞĞ©ÃüÁî±ØĞëÊ¹ÓÃÇ¿ÖÆÄÚ½¨ÃüÁî.
+2008.10.20  ä»Šå¤©æ˜¯å¾®è½¯å‘ç›—ç‰ˆè½¯ä»¶å®£æˆ˜é‡è¦çš„æ—¥å­, å¿ƒæƒ…ååˆ†å¤æ‚... 
+            shell ç³»ç»Ÿæ”¯æŒèƒŒæ™¯è¿è¡Œèƒ½åŠ›.
+2008.12.24  ä»Šå¤©æ˜¯åœ£è¯å‰å¤œ, ç¥æˆ‘è‡ªå·±åœ£è¯å¿«ä¹, å‘µå‘µ! ä¿®æ”¹äº†å‘½ä»¤æç¤ºç¬¦.
+2009.02.09  ä¿®æ”¹ shell ä¸€å¤„å° BUG.
+2009.02.13  dup2 äº§ç”Ÿçš„ fd éœ€è¦å…³é—­.
+2009.02.19  å°†å‘½ä»¤æç¤ºç¬¦ä¿®æ”¹ä¸ºä¸ linux bash ç±»ä¼¼.
+2009.02.23  åŠ å…¥ join èƒŒæ™¯è¿è¡Œçš„ç¬¦å·.
+2009.03.10  ç»ˆç«¯å¯åŠ¨æ—¶ä¿®æ”¹ç»ˆç«¯çª—å£çš„æ ‡é¢˜.
+2009.03.24  å½“ä½¿ç”¨å‘½ä»¤è¿å­—ç¬¦, ä¸‹æ–¹æ‰“å° > æç¤º.
+2009.03.25  åœ¨è°ƒç”¨ shell exec å‰åŠ å…¥å¯¹ optind å’Œ optreset çš„æ“ä½œ, ç¡®ä¿ getopt çš„æ­£ç¡®æ€§.
+            èƒŒæ™¯çº¿ç¨‹ä¸éœ€è¦, åœ¨åˆå§‹åŒ– getopt çº¿ç¨‹ä¸Šä¸‹æ–‡æ—¶, å·²ç»èµ‹äº†åˆå€¼.
+2009.04.13  èƒŒæ™¯çº¿ç¨‹åŠ å…¥æ¸…é™¤å‡½æ•°å…¥æ ˆ, é˜²æ­¢å†…éƒ¨æœåŠ¡å‡½æ•°è°ƒç”¨ exit ç›´æ¥é€€å‡º, å¯¼è‡´æ— æ³•é‡Šæ”¾ç¼“å­˜é€ æˆå†…å­˜æ³„éœ².
+2009.05.22  åŠ å…¥ç”¨æˆ·è®¤è¯åŠŸèƒ½.
+2009.05.28  åŠ å…¥äº† shell é‡å¯çš„åŠŸèƒ½.
+2009.06.30  å¯åŠ¨ shell æ—¶ä¸æ‰“å° tty ç»ˆç«¯å.
+            å‘½ä»¤æç¤ºç¬¦æ˜¾ç¤ºå…¨éƒ¨å½“å‰è·¯å¾„.
+2009.07.13  æ”¯æŒ LW_OPTION_TSHELL_NOECHO åˆ›å»º shell çº¿ç¨‹.
+2009.08.04  __tshellKeywordAdd() åŠ å…¥é€‰é¡¹å‚æ•°.
+            __tshellExec() æ”¯æŒå…³é”®å­—é€‰é¡¹åŠŸèƒ½.
+2009.10.28  __tshellExec() ç›´æ¥å¿½ç•¥æ³¨é‡Šè¡Œ.
+2009.11.21  shell çº¿ç¨‹(æˆ–å…¶è¡ç”Ÿå‡ºçš„èƒŒæ™¯çº¿ç¨‹)ä½¿ç”¨ç§æœ‰çš„ io ç¯å¢ƒ. å…¶è¡ç”Ÿçº¿ç¨‹å°†ç»§æ‰¿çˆ¶ç³»çº¿ç¨‹çš„ io ç¯å¢ƒ.
+2010.05.06  åŠ å…¥ undef æ¥å£çš„æ“ä½œ.
+2010.12.27  è§£å†³ __tshellExec æ‰§è¡Œçš„å˜é‡èµ‹å€¼è¯­å¥é•¿åº¦å¤§äºæœ€å¤§å…³é”®å­—é•¿åº¦æ—¶, å‡ºç°çš„èµ‹å€¼é”™è¯¯ bug. 
+2011.03.10  åŠ å…¥ç³»ç»Ÿé‡å®šå‘è¾“å‡ºåŠŸèƒ½.
+            ä½¿ç”¨æ–°çš„ä¿å­˜æ ‡å‡†æ–‡ä»¶æè¿°ç¬¦çš„æ–¹æ³•.
+2011.04.23  é‡å®šå‘æ—¶, éœ€è¦ä¿®æ­£å‚æ•°åˆ—è¡¨.
+2011.05.19  ä¿®æ­£ __tshellExec() è°ƒç”¨ pfuncHook æ—¶çš„å‚æ•°å‰æœ‰ç¬¦å·é”™è¯¯.
+2011.06.23  ä½¿ç”¨æ–°çš„è‰²å½©è½¬ä¹‰.
+2011.06.24  ä½¿ç”¨æ–°çš„èƒŒæ™¯è¿è¡Œç®—æ³•, ç”± __tshellExec() åˆ¤æ–­å‘½ä»¤è¡Œæ˜¯å¦éœ€è¦èƒŒæ™¯æ‰§è¡Œ.
+2011.07.27  shell èƒŒæ™¯çº¿ç¨‹ä½¿ç”¨ç¼©çŸ­å‘½ä»¤åä½œä¸ºçº¿ç¨‹å.
+2011.08.06  shell èƒŒæ™¯åŒæ­¥æ‰§è¡Œå®Œæ¯•æ—¶, éœ€è¦è¿”å›å‘½ä»¤è¿”å›å€¼, shell ä¸»ä»»åŠ¡ä¹Ÿè¦è®¾ç½®ç›¸åº”çš„è¿”å›å€¼.
+2012.03.25  shell undef å¤„ç†å†™å…¥æ­¤æ–‡ä»¶, åŒæ—¶ shell è¯»å–ä¸å†ä½¿ç”¨ read è€Œæ˜¯ç”¨ä¸€ä¸ªä¸“ç”¨å‡½æ•°, è¿™ä¸ªå‡½æ•°å°†å®ç°ä¸€
+            äº›æ˜“ç”¨æ€§æ“ä½œ, ä¾‹å¦‚å†å²å‘½ä»¤, å‘½ä»¤éšæ„ä½ç½®ä¿®æ”¹ç­‰ç­‰.
+2012.03.25  __tshellReadline() å†…éƒ¨å·²ç»å¤„ç†äº† \n, shell ä»»åŠ¡ä¸éœ€è¦å†æ¬¡å¤„ç†.
+2012.03.27  æ¯ä¸€ä¸ª shell è¾“å…¥éƒ½è¦åˆ¤æ–­å¼ºåˆ¶é€€å‡ºå‘½ä»¤.
+2012.03.30  åˆ›å»ºèƒŒæ™¯æ‰§è¡Œçº¿ç¨‹ä½¿ç”¨ API_ThreadStartEx() è¿›è¡Œ join åŸå­æ“ä½œ.
+2012.08.25  åŠ å…¥ __tshellBgCreateEx() æä¾›æ‰©å±•æ–‡ä»¶æè¿°ç¬¦çš„åŠŸèƒ½.
+2012.11.09  __tshellRestart() å†…éƒ¨éœ€è¦ä¸¥æ ¼åˆ¤æ–­å¥æŸ„æ˜¯å¦æœ‰æ•ˆ.
+2012.12.07  é‡æ–°è®¾è®¡ shell æ‰§è¡ŒèƒŒæ™¯ç¨‹åºçš„æ–¹å¼, é˜²æ­¢äºŒæ¬¡èƒŒæ™¯æ‰§è¡Œé€ æˆçš„æµªè´¹.
+2012.12.24  shell æ”¯æŒé€€å‡ºæ¸…é™¤æ–‡ä»¶åŠŸèƒ½.
+2012.12.25  __tshellBgCreateEx() å°†è‡ªèº«è¿”å›å€¼å’Œå‘½ä»¤è¿”å›å€¼éš”ç¦»å¼€.
+2013.01.23  shell å½“ç³»ç»Ÿå‘½ä»¤å’Œå¯æ‰§è¡Œæ–‡ä»¶åé‡å¤æ—¶, ä¼˜å…ˆè¿è¡Œæ–‡ä»¶. 
+2014.07.23  shell åŠ å…¥æ ‡å‡†æ–‡ä»¶é‡å®šå‘æ”¯æŒ.
+2014.08.27  __tshellRestart() å¦‚æœåˆ¤æ–­æ˜¯åœ¨ç­‰å¾…å…¶ä»–ä»»åŠ¡, åˆ™ä½¿ç”¨ kill æ“ä½œ.
+2014.04.17  å¯¹é‡å®šå‘æè¿°ç¬¦çš„å›æ”¶éœ€è¦åœ¨å†…æ ¸ IO ç¯å¢ƒä¸­ä¸­è¿›è¡Œ.
+2017.07.19  æ‰§è¡Œå®Œæ¯æ¡å‘½ä»¤åä½¿ç”¨ fpurge(stdin) æ¸…é™¤è¾“å…¥ç¼“å­˜.
+2018.12.13  æœ‰äº›å‘½ä»¤å¿…é¡»ä½¿ç”¨å¼ºåˆ¶å†…å»ºå‘½ä»¤.
 *********************************************************************************************************/
 #define  __SYLIXOS_STDIO
 #define  __SYLIXOS_KERNEL
 #include "unistd.h"
 /*********************************************************************************************************
-  Ó¦ÓÃ¼¶ API
+  åº”ç”¨çº§ API
 *********************************************************************************************************/
 #include "../SylixOS/api/Lw_Api_Kernel.h"
 #include "../SylixOS/api/Lw_Api_System.h"
 /*********************************************************************************************************
-  ²Ã¼ô¿ØÖÆ
+  è£å‰ªæ§åˆ¶
 *********************************************************************************************************/
 #if LW_CFG_SHELL_EN > 0
 #include "limits.h"
@@ -91,27 +91,27 @@
 #include "../SylixOS/shell/hashLib/hashHorner.h"
 #include "../SylixOS/shell/ttinyVar/ttinyVarLib.h"
 /*********************************************************************************************************
-  ÄÚ²¿½ø³ÌÏà¹Øº¯ÊıÉùÃ÷
+  å†…éƒ¨è¿›ç¨‹ç›¸å…³å‡½æ•°å£°æ˜
 *********************************************************************************************************/
 #if LW_CFG_MODULELOADER_EN > 0
 #include "../SylixOS/loader/include/loader_vppatch.h"
 #endif                                                                  /*  LW_CFG_MODULELOADER_EN > 0  */
 /*********************************************************************************************************
-  ±³¾°¿ØÖÆ (t_shell Ïß³ÌÖĞÍ¨¹ı½ÓÊÕµÄÃüÁî×Ö·û´®Ä©Î²ÅĞ¶Ï)
+  èƒŒæ™¯æ§åˆ¶ (t_shell çº¿ç¨‹ä¸­é€šè¿‡æ¥æ”¶çš„å‘½ä»¤å­—ç¬¦ä¸²æœ«å°¾åˆ¤æ–­)
 *********************************************************************************************************/
-#define __TTINY_SHELL_BG_ASYNC            '&'                           /*  ±³¾°Òì²½Ö´ĞĞ                */
-#define __TTINY_SHELL_BG_JOIN             '^'                           /*  ±³¾°Í¬²½Ö´ĞĞ                */
+#define __TTINY_SHELL_BG_ASYNC            '&'                           /*  èƒŒæ™¯å¼‚æ­¥æ‰§è¡Œ                */
+#define __TTINY_SHELL_BG_JOIN             '^'                           /*  èƒŒæ™¯åŒæ­¥æ‰§è¡Œ                */
 /*********************************************************************************************************
-  È«¾Ö±äÁ¿
+  å…¨å±€å˜é‡
 *********************************************************************************************************/
 #if LW_CFG_SHELL_HOOK_EN > 0
 static FUNCPTR          _G_pfuncShellHook   = LW_NULL;
 #endif                                                                  /*  LW_CFG_SHELL_HOOK_EN > 0    */
-static PLW_LIST_LINE    _G_plineTSKeyHeader = LW_NULL;                  /*  ÃüÁîÁ´±íÍ·                  */
+static PLW_LIST_LINE    _G_plineTSKeyHeader = LW_NULL;                  /*  å‘½ä»¤é“¾è¡¨å¤´                  */
 static PLW_LIST_LINE    _G_plineTSKeyHeaderHashTbl[LW_CFG_SHELL_KEY_HASH_SIZE];
-                                                                        /*  ¹şÏ£ËÑË÷±í                  */
+                                                                        /*  å“ˆå¸Œæœç´¢è¡¨                  */
 /*********************************************************************************************************
-  Ç¿ÖÆÊ¹ÓÃÄÚ½¨ÃüÁî±í
+  å¼ºåˆ¶ä½¿ç”¨å†…å»ºå‘½ä»¤è¡¨
 *********************************************************************************************************/
 #if LW_CFG_MODULELOADER_EN > 0
 
@@ -121,18 +121,18 @@ static const PCHAR      _G_pcResBuildinCmd[] = {
 
 #endif                                                                  /*  LW_CFG_MODULELOADER_EN > 0  */
 /*********************************************************************************************************
-  shell Ö´ĞĞÏß³Ì¶ÑÕ»´óĞ¡ (Ä¬ÈÏÓë shell ÏàÍ¬)
+  shell æ‰§è¡Œçº¿ç¨‹å †æ ˆå¤§å° (é»˜è®¤ä¸ shell ç›¸åŒ)
 *********************************************************************************************************/
 extern size_t           _G_stShellStackSize;
 /*********************************************************************************************************
-  ±³¾°Ïß³ÌÖ´ĞĞ²ÎÊı
+  èƒŒæ™¯çº¿ç¨‹æ‰§è¡Œå‚æ•°
 *********************************************************************************************************/
 typedef struct {
-    INT          TSBG_iFd[3];                                           /*  ÎÄ¼şÃèÊö·û                  */
-    BOOL         TSBG_bClosed[3];                                       /*  ÔËĞĞÍê±ÏÊÇ·ñ¹Ø±Õ¶ÔÓ¦ÎÄ¼ş    */
-    PCHAR        TSBG_pcDefPath;                                        /*  ¸¸ÏµÏß³Ìµ±Ç°Ä¿Â¼Ïî          */
-    BOOL         TSBG_bIsJoin;                                          /*  shell ÊÇ·ñÔÚµÈ´ı·µ»ØÖµ      */
-    CHAR         TSBG_cCommand[1];                                      /*  Ö´ĞĞÃüÁî                    */
+    INT          TSBG_iFd[3];                                           /*  æ–‡ä»¶æè¿°ç¬¦                  */
+    BOOL         TSBG_bClosed[3];                                       /*  è¿è¡Œå®Œæ¯•æ˜¯å¦å…³é—­å¯¹åº”æ–‡ä»¶    */
+    PCHAR        TSBG_pcDefPath;                                        /*  çˆ¶ç³»çº¿ç¨‹å½“å‰ç›®å½•é¡¹          */
+    BOOL         TSBG_bIsJoin;                                          /*  shell æ˜¯å¦åœ¨ç­‰å¾…è¿”å›å€¼      */
+    CHAR         TSBG_cCommand[1];                                      /*  æ‰§è¡Œå‘½ä»¤                    */
 } __TSHELL_BACKGROUND;
 typedef __TSHELL_BACKGROUND     *__PTSHELL_BACKGROUND;
 
@@ -146,7 +146,7 @@ typedef struct {
 } __TSHELL_PROMPT_CTX;
 typedef __TSHELL_PROMPT_CTX     *__PTSHELL_PROMPT_CTX;
 /*********************************************************************************************************
-  ÓÃ»§ÈÏÖ¤
+  ç”¨æˆ·è®¤è¯
 *********************************************************************************************************/
        ULONG  __tshellUserAuthen(INT  iTtyFd, BOOL  bWaitInf);
 static INT    __tshellBgCreate(INT      iFd, 
@@ -156,17 +156,17 @@ static INT    __tshellBgCreate(INT      iFd,
                                BOOL     bIsJoin, 
                                ULONG    ulMagic);
 /*********************************************************************************************************
-  ×°ÔØÆ÷ÄÚ²¿º¯ÊıÉùÃ÷
+  è£…è½½å™¨å†…éƒ¨å‡½æ•°å£°æ˜
 *********************************************************************************************************/
 #if LW_CFG_MODULELOADER_EN > 0
 extern BOOL   __ldPathIsFile(CPCHAR  pcName, struct stat *pstatFile);
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellIsResCmd
-** ¹¦ÄÜÃèÊö: ÊÇ·ñÎªÇ¿ÖÆÄÚ½¨ÃüÁî
-** Êä¡¡Èë  : pcKeyword         µ±Ç°Î´ÄÜÊ¶±ğµÄÃüÁî
-** Êä¡¡³ö  : ÊÇ·ñÓĞ¶ÔÓ¦µÄÎÄ¼ş
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellIsResCmd
+** åŠŸèƒ½æè¿°: æ˜¯å¦ä¸ºå¼ºåˆ¶å†…å»ºå‘½ä»¤
+** è¾“ã€€å…¥  : pcKeyword         å½“å‰æœªèƒ½è¯†åˆ«çš„å‘½ä»¤
+** è¾“ã€€å‡º  : æ˜¯å¦æœ‰å¯¹åº”çš„æ–‡ä»¶
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 static BOOL  __tshellIsResCmd (CPCHAR  pcKeyword)
 {
@@ -181,12 +181,12 @@ static BOOL  __tshellIsResCmd (CPCHAR  pcKeyword)
     return  (LW_FALSE);
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellCheckFile
-** ¹¦ÄÜÃèÊö: shell ¼ì²éÊÇ·ñ´æÔÚ¶ÔÓ¦ÃüÁîµÄÎÄ¼ş
-** Êä¡¡Èë  : pcKeyword         µ±Ç°Î´ÄÜÊ¶±ğµÄÃüÁî
-** Êä¡¡³ö  : ÊÇ·ñÓĞ¶ÔÓ¦µÄÎÄ¼ş
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellCheckFile
+** åŠŸèƒ½æè¿°: shell æ£€æŸ¥æ˜¯å¦å­˜åœ¨å¯¹åº”å‘½ä»¤çš„æ–‡ä»¶
+** è¾“ã€€å…¥  : pcKeyword         å½“å‰æœªèƒ½è¯†åˆ«çš„å‘½ä»¤
+** è¾“ã€€å‡º  : æ˜¯å¦æœ‰å¯¹åº”çš„æ–‡ä»¶
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 static BOOL  __tshellCheckFile (CPCHAR  pcKeyword)
 {
@@ -196,7 +196,7 @@ static BOOL  __tshellCheckFile (CPCHAR  pcKeyword)
     PCHAR   pcStart;
     PCHAR   pcDiv;
     
-    if (lib_strchr(pcKeyword, PX_DIVIDER)) {                            /*  ÊÇÒ»¸öÂ·¾¶                  */
+    if (lib_strchr(pcKeyword, PX_DIVIDER)) {                            /*  æ˜¯ä¸€ä¸ªè·¯å¾„                  */
         if (__ldPathIsFile(pcKeyword, LW_NULL)) {
             return  (LW_TRUE);
         
@@ -212,25 +212,25 @@ static BOOL  __tshellCheckFile (CPCHAR  pcKeyword)
         pcPathBuffer = pcBuffer + MAX_FILENAME_LENGTH;
     
         if (lib_getenv_r("PATH", pcBuffer, MAX_FILENAME_LENGTH)
-            != ERROR_NONE) {                                            /*  PATH »·¾³±äÁ¿ÖµÎª¿Õ         */
+            != ERROR_NONE) {                                            /*  PATH ç¯å¢ƒå˜é‡å€¼ä¸ºç©º         */
             __SHEAP_FREE(pcBuffer);
-            return  (LW_FALSE);                                         /*  ÎŞ·¨ÕÒµ½ÎÄ¼ş                */
+            return  (LW_FALSE);                                         /*  æ— æ³•æ‰¾åˆ°æ–‡ä»¶                */
         }
         
         pcPathBuffer[MAX_FILENAME_LENGTH - 1] = PX_EOS;
         
-        pcDiv = pcBuffer;                                               /*  ´ÓµÚÒ»¸ö²ÎÊı¿ªÊ¼ÕÒ          */
+        pcDiv = pcBuffer;                                               /*  ä»ç¬¬ä¸€ä¸ªå‚æ•°å¼€å§‹æ‰¾          */
         do {
             pcStart = pcDiv;
-            pcDiv   = lib_strchr(pcStart, ':');                         /*  ²éÕÒÏÂÒ»¸ö²ÎÊı·Ö¸îµã        */
+            pcDiv   = lib_strchr(pcStart, ':');                         /*  æŸ¥æ‰¾ä¸‹ä¸€ä¸ªå‚æ•°åˆ†å‰²ç‚¹        */
             if (pcDiv) {
                 *pcDiv = PX_EOS;
                 pcDiv++;
             }
             
             snprintf(pcPathBuffer, MAX_FILENAME_LENGTH, "%s/%s", 
-                     pcStart, pcKeyword);                               /*  ºÏ²¢ÎªÍêÕûµÄÄ¿Â¼            */
-            if (__ldPathIsFile(pcPathBuffer, LW_NULL)) {                /*  ´ËÎÄ¼ş¿ÉÒÔ±»·ÃÎÊ            */
+                     pcStart, pcKeyword);                               /*  åˆå¹¶ä¸ºå®Œæ•´çš„ç›®å½•            */
+            if (__ldPathIsFile(pcPathBuffer, LW_NULL)) {                /*  æ­¤æ–‡ä»¶å¯ä»¥è¢«è®¿é—®            */
                 __SHEAP_FREE(pcBuffer);
                 return  (LW_TRUE);
             }
@@ -244,12 +244,12 @@ static BOOL  __tshellCheckFile (CPCHAR  pcKeyword)
 
 #endif                                                                  /*  LW_CFG_MODULELOADER_EN > 0  */
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellThreadHook
-** ¹¦ÄÜÃèÊö: Ïò ttiny shell ÈÎÎñ×¢²áÒ»¸ö»Øµ÷¹³×Ó.
-** Êä¡¡Èë  : pfuncShellHook     Ïò shell ×¢²áµÄ»Øµ÷¹³×Ó
-** Êä¡¡³ö  : Ö®Ç°µÄ»Øµ÷¹³×Ó
-** È«¾Ö±äÁ¿:
-** µ÷ÓÃÄ£¿é:
+** å‡½æ•°åç§°: __tshellThreadHook
+** åŠŸèƒ½æè¿°: å‘ ttiny shell ä»»åŠ¡æ³¨å†Œä¸€ä¸ªå›è°ƒé’©å­.
+** è¾“ã€€å…¥  : pfuncShellHook     å‘ shell æ³¨å†Œçš„å›è°ƒé’©å­
+** è¾“ã€€å‡º  : ä¹‹å‰çš„å›è°ƒé’©å­
+** å…¨å±€å˜é‡:
+** è°ƒç”¨æ¨¡å—:
 *********************************************************************************************************/
 #if LW_CFG_SHELL_HOOK_EN > 0
 
@@ -264,46 +264,46 @@ FUNCPTR  __tshellThreadHook (FUNCPTR  pfuncShellHook)
 
 #endif                                                                  /*  LW_CFG_SHELL_HOOK_EN > 0    */
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellUndef
-** ¹¦ÄÜÃèÊö: shell Î´¶¨ÒåÃüÁî´¦Àí (½«¿ÉÖ´ĞĞÎÄ¼ş×ª½»¸ø exec ÃüÁîÖ´ĞĞ)
-** Êä¡¡Èë  : pcCmd             ÍêÕûÃüÁî
-**           pcKeyword         ÊÇ·ñ¿ÉÒÔ¼ì²â³ö¹Ø¼ü×Ö, Èç¹û²»ÄÜ pcKeyword Îª¿Õ×Ö´®
-**           ppcParam          ÖØĞÂ¶¨Î»µÄ²ÎÊıÍ·
-** Êä¡¡³ö  : NONE
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellUndef
+** åŠŸèƒ½æè¿°: shell æœªå®šä¹‰å‘½ä»¤å¤„ç† (å°†å¯æ‰§è¡Œæ–‡ä»¶è½¬äº¤ç»™ exec å‘½ä»¤æ‰§è¡Œ)
+** è¾“ã€€å…¥  : pcCmd             å®Œæ•´å‘½ä»¤
+**           pcKeyword         æ˜¯å¦å¯ä»¥æ£€æµ‹å‡ºå…³é”®å­—, å¦‚æœä¸èƒ½ pcKeyword ä¸ºç©ºå­—ä¸²
+**           ppcParam          é‡æ–°å®šä½çš„å‚æ•°å¤´
+** è¾“ã€€å‡º  : NONE
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 ULONG  __tshellUndef (PCHAR  pcCmd, PCHAR  pcKeyword, PCHAR  *ppcParam)
 {
-    *pcKeyword = PX_EOS;                                                /*  ±äÁ¿¶¨Òå±í´ïÊ½              */
+    *pcKeyword = PX_EOS;                                                /*  å˜é‡å®šä¹‰è¡¨è¾¾å¼              */
     return  (__tshellVarDefine(pcCmd));
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellCloseRedir
-** ¹¦ÄÜÃèÊö: ttiny shell ¹Ø±Õ wrapper ´´½¨µÄÖØ¶¨ÏòÃèÊö·û
-** Êä¡¡Èë  : iFd               ÎÄ¼şÃèÊö·û
-** Êä¡¡³ö  : NONE
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellCloseRedir
+** åŠŸèƒ½æè¿°: ttiny shell å…³é—­ wrapper åˆ›å»ºçš„é‡å®šå‘æè¿°ç¬¦
+** è¾“ã€€å…¥  : iFd               æ–‡ä»¶æè¿°ç¬¦
+** è¾“ã€€å‡º  : NONE
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 static VOID  __tshellCloseRedir (INT  iFd)
 {
     if (iFd >= 0) {
-        __KERNEL_SPACE_ENTER();                                         /*  ÕâĞ©ÎÄ¼ş´´½¨Ê±±£Ö¤ÊÇÄÚºËÀïµÄ*/
+        __KERNEL_SPACE_ENTER();                                         /*  è¿™äº›æ–‡ä»¶åˆ›å»ºæ—¶ä¿è¯æ˜¯å†…æ ¸é‡Œçš„*/
         close(iFd);
         __KERNEL_SPACE_EXIT();
     }
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellRedir
-** ¹¦ÄÜÃèÊö: ·ÖÎöÖØ¶¨Ïò×Ö´®²¢´ò¿¨Ïà¹ØµÄÎÄ¼ş
-** Êä¡¡Èë  : pcString     ÖØ¶¨Ïò×Ö´®
-**           pcRedir      ÖØ¶¨Ïòµã
-**           ulMe         µ±Ç°Ïß³Ì
-**           piPopCnt     POP ²Ù×÷µÄ¸öÊı
-** Êä¡¡³ö  : ÊÇ·ñ·ÖÎö³É¹¦
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellRedir
+** åŠŸèƒ½æè¿°: åˆ†æé‡å®šå‘å­—ä¸²å¹¶æ‰“å¡ç›¸å…³çš„æ–‡ä»¶
+** è¾“ã€€å…¥  : pcString     é‡å®šå‘å­—ä¸²
+**           pcRedir      é‡å®šå‘ç‚¹
+**           ulMe         å½“å‰çº¿ç¨‹
+**           piPopCnt     POP æ“ä½œçš„ä¸ªæ•°
+** è¾“ã€€å‡º  : æ˜¯å¦åˆ†ææˆåŠŸ
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 static INT  __tshellRedir (PCHAR  pcString, PCHAR  pcRedir, LW_OBJECT_HANDLE ulMe, INT *piPopCnt)
 {
@@ -312,9 +312,9 @@ static INT  __tshellRedir (PCHAR  pcString, PCHAR  pcRedir, LW_OBJECT_HANDLE ulM
     INT         iOutOpt;
     PCHAR       pcFile;
     
-    if (*pcRedir == *(pcRedir + 1)) {                                   /*  ×·¼Ó´ò¿ª                    */
+    if (*pcRedir == *(pcRedir + 1)) {                                   /*  è¿½åŠ æ‰“å¼€                    */
         iFlag |= O_APPEND;
-        pcFile = pcRedir + 2;                                           /*  ¶¨Î»ÎÄ¼ş                    */
+        pcFile = pcRedir + 2;                                           /*  å®šä½æ–‡ä»¶                    */
         
     } else {
         iFlag |= O_TRUNC;
@@ -325,11 +325,11 @@ static INT  __tshellRedir (PCHAR  pcString, PCHAR  pcRedir, LW_OBJECT_HANDLE ulM
         pcFile++;
     }
     
-    if (*pcFile == PX_EOS) {                                            /*  ¶¨Î»ÎÄ¼ş´íÎó                */
+    if (*pcFile == PX_EOS) {                                            /*  å®šä½æ–‡ä»¶é”™è¯¯                */
         return  (PX_ERROR);
     }
     
-    if (*pcRedir == '>') {                                              /*  ±ê×¼Êä³ö»ò±ê×¼´íÎó          */
+    if (*pcRedir == '>') {                                              /*  æ ‡å‡†è¾“å‡ºæˆ–æ ‡å‡†é”™è¯¯          */
         *pcRedir =  PX_EOS;
         
         if (pcString == pcRedir) {
@@ -373,8 +373,8 @@ static INT  __tshellRedir (PCHAR  pcString, PCHAR  pcRedir, LW_OBJECT_HANDLE ulM
                 API_IoTaskStdSet(ulMe, STD_ERR, iFd);
             }
         }
-    } else {                                                            /*  ±ê×¼ÊäÈë¶¨Î»                */
-        iFlag &= ~O_TRUNC;                                              /*  ÊäÈëÃ»ÓĞ O_TRUNC ²Ù×÷       */
+    } else {                                                            /*  æ ‡å‡†è¾“å…¥å®šä½                */
+        iFlag &= ~O_TRUNC;                                              /*  è¾“å…¥æ²¡æœ‰ O_TRUNC æ“ä½œ       */
         iFd = open(pcFile, iFlag, DEFAULT_FILE_PERM);
         if (iFd < 0) {
             return  (PX_ERROR);
@@ -389,14 +389,14 @@ static INT  __tshellRedir (PCHAR  pcString, PCHAR  pcRedir, LW_OBJECT_HANDLE ulM
     return  (ERROR_NONE);
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellWrapper
-** ¹¦ÄÜÃèÊö: ÔËĞĞ shell ÃüÁîµÄÍâ¿Ç
-** Êä¡¡Èë  : pfuncCommand ÏµÍ³ÃüÁîÖ¸Õë
-**           iArgC        ²ÎÊı¸öÊı
-**           ppcArgV ²ÎÊı±í
-** Êä¡¡³ö  : ÃüÁî·µ»ØÖµ
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellWrapper
+** åŠŸèƒ½æè¿°: è¿è¡Œ shell å‘½ä»¤çš„å¤–å£³
+** è¾“ã€€å…¥  : pfuncCommand ç³»ç»Ÿå‘½ä»¤æŒ‡é’ˆ
+**           iArgC        å‚æ•°ä¸ªæ•°
+**           ppcArgV å‚æ•°è¡¨
+** è¾“ã€€å‡º  : å‘½ä»¤è¿”å›å€¼
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 static INT  __tshellWrapper (FUNCPTR  pfuncCommand, INT  iArgC, PCHAR  ppcArgV[])
 {
@@ -408,15 +408,15 @@ static INT  __tshellWrapper (FUNCPTR  pfuncCommand, INT  iArgC, PCHAR  ppcArgV[]
     
     LW_OBJECT_HANDLE  ulMe = API_ThreadIdSelf();
 
-    if (iArgC < 2) {                                                    /*  ²»°üº¬ÖØ¶¨Ïò                */
+    if (iArgC < 2) {                                                    /*  ä¸åŒ…å«é‡å®šå‘                */
         return  pfuncCommand(iArgC, ppcArgV);
     }
     
-    for (i = 0; i < 3; i++) {                                           /*  ±£´æ¾ÉµÄ                    */
+    for (i = 0; i < 3; i++) {                                           /*  ä¿å­˜æ—§çš„                    */
         iOldStd[i] = API_IoTaskStdGet(ulMe, i);
     }
     
-    for (i = 1; i < iArgC; i++) {                                       /*  ±éÀú²ÎÊı                    */
+    for (i = 1; i < iArgC; i++) {                                       /*  éå†å‚æ•°                    */
         PCHAR   pcRedir = lib_strchr(ppcArgV[i], '<');
         
         if (pcRedir == LW_NULL) {
@@ -426,20 +426,20 @@ static INT  __tshellWrapper (FUNCPTR  pfuncCommand, INT  iArgC, PCHAR  ppcArgV[]
             }
         }
         
-        if (__tshellRedir(ppcArgV[i], pcRedir, ulMe, &iPopCnt)) {       /*  ·ÖÎö²¢Ö´ĞĞÖØ¶¨Î»²Ù×÷        */
+        if (__tshellRedir(ppcArgV[i], pcRedir, ulMe, &iPopCnt)) {       /*  åˆ†æå¹¶æ‰§è¡Œé‡å®šä½æ“ä½œ        */
             fprintf(stderr, "can not process redirect.\n");
             goto    __ret;
         
         } else if (iRealArgc > i) {
-            iRealArgc = i;                                              /*  ÖØ¶¨Î»·ÖÎö³É¹¦              */
+            iRealArgc = i;                                              /*  é‡å®šä½åˆ†ææˆåŠŸ              */
         }
     }
     
     ppcArgV[iRealArgc] = LW_NULL;
-    iRet = pfuncCommand(iRealArgc, ppcArgV);                            /*  Ö´ĞĞÃüÁî                    */
+    iRet = pfuncCommand(iRealArgc, ppcArgV);                            /*  æ‰§è¡Œå‘½ä»¤                    */
     
 __ret:
-    for (i = 0; i < 3; i++) {                                           /*  »¹Ô­¾ÉµÄ                    */
+    for (i = 0; i < 3; i++) {                                           /*  è¿˜åŸæ—§çš„                    */
         API_IoTaskStdSet(ulMe, i, iOldStd[i]);
     }
 
@@ -451,14 +451,14 @@ __ret:
     
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellChkBg
-** ¹¦ÄÜÃèÊö: Ô¤´¦Àí±³¾°Ö´ĞĞÏà¹Ø²ÎÊı shell ÃüÁî±³¾°Ö´ĞĞ²ÎÊı
-** Êä¡¡Èë  : pcCommand    ÃüÁî×Ö·û´®
-**           pbNeedJoin   ÊÇ·ñĞèÒª JOIN.
-**           pbNeedAsyn   Ê¹ÓÃĞèÒªÒì²½Ö´ĞĞ.
-** Êä¡¡³ö  : NONE
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellChkBg
+** åŠŸèƒ½æè¿°: é¢„å¤„ç†èƒŒæ™¯æ‰§è¡Œç›¸å…³å‚æ•° shell å‘½ä»¤èƒŒæ™¯æ‰§è¡Œå‚æ•°
+** è¾“ã€€å…¥  : pcCommand    å‘½ä»¤å­—ç¬¦ä¸²
+**           pbNeedJoin   æ˜¯å¦éœ€è¦ JOIN.
+**           pbNeedAsyn   ä½¿ç”¨éœ€è¦å¼‚æ­¥æ‰§è¡Œ.
+** è¾“ã€€å‡º  : NONE
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 VOID  __tshellPreTreatedBg (PCHAR  cCommand, BOOL  *pbNeedJoin, BOOL  *pbNeedAsyn)
 {
@@ -472,28 +472,28 @@ VOID  __tshellPreTreatedBg (PCHAR  cCommand, BOOL  *pbNeedJoin, BOOL  *pbNeedAsy
         *pbNeedAsyn = LW_FALSE;
     }
 
-    __tshellStrDelCRLF(cCommand);                                       /*  É¾³ı CR Óë LF ×Ö·û          */
-    __tshellStrFormat(cCommand, cCommand);                              /*  ÕûÀí shell ÃüÁî             */
+    __tshellStrDelCRLF(cCommand);                                       /*  åˆ é™¤ CR ä¸ LF å­—ç¬¦          */
+    __tshellStrFormat(cCommand, cCommand);                              /*  æ•´ç† shell å‘½ä»¤             */
     
     stStrLen = lib_strlen(cCommand);
     if (stStrLen < 1) {
         return;
     }
     
-    if (cCommand[stStrLen - 1] == __TTINY_SHELL_BG_JOIN) {              /*  ÃüÁîĞĞÍ¬²½±³¾°Ö´ĞĞ          */
+    if (cCommand[stStrLen - 1] == __TTINY_SHELL_BG_JOIN) {              /*  å‘½ä»¤è¡ŒåŒæ­¥èƒŒæ™¯æ‰§è¡Œ          */
         if (pbNeedJoin) {
             *pbNeedJoin = LW_TRUE;
         }
         pcTail = &cCommand[stStrLen - 1];
         
-    } else if (cCommand[stStrLen - 1] == __TTINY_SHELL_BG_ASYNC) {      /*  ÃüÁîĞĞÒì²½±³¾°Ö´ĞĞ          */
+    } else if (cCommand[stStrLen - 1] == __TTINY_SHELL_BG_ASYNC) {      /*  å‘½ä»¤è¡Œå¼‚æ­¥èƒŒæ™¯æ‰§è¡Œ          */
         if (pbNeedAsyn) {
             *pbNeedAsyn = LW_TRUE;
         }
         pcTail = &cCommand[stStrLen - 1];
     }
     
-    while (pcTail != cCommand) {                                        /*  È¥µô±³¾°ÔËĞĞ·ûºÅ            */
+    while (pcTail != cCommand) {                                        /*  å»æ‰èƒŒæ™¯è¿è¡Œç¬¦å·            */
         if ((*pcTail == __TTINY_SHELL_BG_JOIN) ||
             (*pcTail == __TTINY_SHELL_BG_ASYNC)) {
             *pcTail = PX_EOS;
@@ -508,14 +508,14 @@ VOID  __tshellPreTreatedBg (PCHAR  cCommand, BOOL  *pbNeedJoin, BOOL  *pbNeedAsy
     }
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellExec
-** ¹¦ÄÜÃèÊö: ttiny shell ÏµÍ³, Ö´ĞĞÒ»Ìõ shell ÃüÁî
-** Êä¡¡Èë  : pcCommand    ÃüÁî×Ö·û´®
-**           pfuncHook    ÌáÈ¡¹Ø¼ü×Öºóµ÷ÓÃµÄ»Øµ÷º¯Êı.
-** Êä¡¡³ö  : ÃüÁî·µ»ØÖµ(µ±·¢Éú´íÎóÊ±, ·µ»ØÖµÎª¸ºÖµ)
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
-** ×¢  Òâ  : µ± shell ¼ì²â³öÃüÁî×Ö·û´®´íÎóÊ±, ½«»á·µ»Ø¸ºÖµ, ´ËÖµÈ¡Ïà·´Êıºó¼´Îª´íÎó±àºÅ.
+** å‡½æ•°åç§°: __tshellExec
+** åŠŸèƒ½æè¿°: ttiny shell ç³»ç»Ÿ, æ‰§è¡Œä¸€æ¡ shell å‘½ä»¤
+** è¾“ã€€å…¥  : pcCommand    å‘½ä»¤å­—ç¬¦ä¸²
+**           pfuncHook    æå–å…³é”®å­—åè°ƒç”¨çš„å›è°ƒå‡½æ•°.
+** è¾“ã€€å‡º  : å‘½ä»¤è¿”å›å€¼(å½“å‘ç”Ÿé”™è¯¯æ—¶, è¿”å›å€¼ä¸ºè´Ÿå€¼)
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
+** æ³¨  æ„  : å½“ shell æ£€æµ‹å‡ºå‘½ä»¤å­—ç¬¦ä¸²é”™è¯¯æ—¶, å°†ä¼šè¿”å›è´Ÿå€¼, æ­¤å€¼å–ç›¸åæ•°åå³ä¸ºé”™è¯¯ç¼–å·.
 *********************************************************************************************************/
 INT  __tshellExec (CPCHAR  pcCommandExec, VOIDFUNCPTR  pfuncHook)
 {
@@ -532,116 +532,116 @@ INT  __tshellExec (CPCHAR  pcCommandExec, VOIDFUNCPTR  pfuncHook)
     PLW_CLASS_TCB       ptcbCur;
     __PTSHELL_KEYWORD   pskwNode = LW_NULL;
     
-             CHAR       cCommandBuffer[LW_CFG_SHELL_MAX_COMMANDLEN + 1];/*  ÁÙÊ±»º³åÇø                  */
-             CHAR       cCommandBg[LW_CFG_SHELL_MAX_COMMANDLEN + 1];    /*  ±³¾°ÔËĞĞ»º³åÇø              */
+             CHAR       cCommandBuffer[LW_CFG_SHELL_MAX_COMMANDLEN + 1];/*  ä¸´æ—¶ç¼“å†²åŒº                  */
+             CHAR       cCommandBg[LW_CFG_SHELL_MAX_COMMANDLEN + 1];    /*  èƒŒæ™¯è¿è¡Œç¼“å†²åŒº              */
              
-             CHAR       cKeyword[LW_CFG_SHELL_MAX_KEYWORDLEN + 1];      /*  ¹Ø¼ü×Ö                      */
-             PCHAR      pcParamList[LW_CFG_SHELL_MAX_PARAMNUM + 1];     /*  ²ÎÊıÁĞ±í                    */
+             CHAR       cKeyword[LW_CFG_SHELL_MAX_KEYWORDLEN + 1];      /*  å…³é”®å­—                      */
+             PCHAR      pcParamList[LW_CFG_SHELL_MAX_PARAMNUM + 1];     /*  å‚æ•°åˆ—è¡¨                    */
              
-             PCHAR      pcParam = LW_NULL;                              /*  Ö¸ÏòµÚÒ»¸ö²ÎÊıµÄÖ¸Õë        */
+             PCHAR      pcParam = LW_NULL;                              /*  æŒ‡å‘ç¬¬ä¸€ä¸ªå‚æ•°çš„æŒ‡é’ˆ        */
              
-             INT        iStdFd;                                         /*  ±³¾°Ö´ĞĞ±ê×¼ÎÄ¼ş            */
-             BOOL       bIsJoin;                                        /*  ±³¾°Ö´ĞĞÊÇ·ñÍ¬²½            */
-             CPCHAR     pcBgCmd;                                        /*  ±³¾°Ö´ĞĞÃüÁî                */
-             size_t     stBgCmdLen;                                     /*  ±³¾°Ö´ĞĞ³¤¶È                */
-             ULONG      ulMagic;                                        /*  ±³¾° magic Âë               */
+             INT        iStdFd;                                         /*  èƒŒæ™¯æ‰§è¡Œæ ‡å‡†æ–‡ä»¶            */
+             BOOL       bIsJoin;                                        /*  èƒŒæ™¯æ‰§è¡Œæ˜¯å¦åŒæ­¥            */
+             CPCHAR     pcBgCmd;                                        /*  èƒŒæ™¯æ‰§è¡Œå‘½ä»¤                */
+             size_t     stBgCmdLen;                                     /*  èƒŒæ™¯æ‰§è¡Œé•¿åº¦                */
+             ULONG      ulMagic;                                        /*  èƒŒæ™¯ magic ç                */
              
-             BOOL       bCmdLineNeedJoin;                               /*  ÃüÁîĞĞÊÇ·ñÒªÇóÍ¬²½±³¾°Ö´ĞĞ  */
-             BOOL       bCmdLineNeedAsyn;                               /*  ÃüÁîĞĞÊÇ·ñÒªÇóÒì²½±³¾°Ö´ĞĞ  */
+             BOOL       bCmdLineNeedJoin;                               /*  å‘½ä»¤è¡Œæ˜¯å¦è¦æ±‚åŒæ­¥èƒŒæ™¯æ‰§è¡Œ  */
+             BOOL       bCmdLineNeedAsyn;                               /*  å‘½ä»¤è¡Œæ˜¯å¦è¦æ±‚å¼‚æ­¥èƒŒæ™¯æ‰§è¡Œ  */
              
     
-    if (!pcCmd || __TTINY_SHELL_CMD_ISEND(pcCmd)) {                     /*  ÃüÁî´íÎó                    */
+    if (!pcCmd || __TTINY_SHELL_CMD_ISEND(pcCmd)) {                     /*  å‘½ä»¤é”™è¯¯                    */
         return  (ERROR_NONE);
     }
     
-    while (__TTINY_SHELL_CMD_ISWHITE(pcCmd)) {                          /*  ¹ıÂËÇ°ÃæµÄ²»¿É¼û×Ö·û        */
+    while (__TTINY_SHELL_CMD_ISWHITE(pcCmd)) {                          /*  è¿‡æ»¤å‰é¢çš„ä¸å¯è§å­—ç¬¦        */
         pcCmd++;
         if (__TTINY_SHELL_CMD_ISEND(pcCmd)) {
-            return  (ERROR_NONE);                                       /*  ²»ÊÇÓĞĞ§µÄÃüÁî×Ö            */
+            return  (ERROR_NONE);                                       /*  ä¸æ˜¯æœ‰æ•ˆçš„å‘½ä»¤å­—            */
         }
     }
     
-    if (*pcCmd == '#') {                                                /*  ×¢ÊÍĞĞÖ±½ÓºöÂÔ              */
+    if (*pcCmd == '#') {                                                /*  æ³¨é‡Šè¡Œç›´æ¥å¿½ç•¥              */
         return  (ERROR_NONE);
     }
     
-    stStrLen = lib_strnlen(pcCmd, LW_CFG_SHELL_MAX_COMMANDLEN + 1);     /*  ¼ÆËã×Ö·û´®³¤¶Ì              */
+    stStrLen = lib_strnlen(pcCmd, LW_CFG_SHELL_MAX_COMMANDLEN + 1);     /*  è®¡ç®—å­—ç¬¦ä¸²é•¿çŸ­              */
     if ((stStrLen > LW_CFG_SHELL_MAX_COMMANDLEN - 1) || (stStrLen < 1)) {
-        return  (-ERROR_TSHELL_EPARAM);                                 /*  ×Ö·û´®³¤¶È´íÎó              */
+        return  (-ERROR_TSHELL_EPARAM);                                 /*  å­—ç¬¦ä¸²é•¿åº¦é”™è¯¯              */
     }
     
-    ulError = __tshellStrConvertVar(pcCmd, cCommandBuffer);             /*  ±äÁ¿Ìæ»»                    */
+    ulError = __tshellStrConvertVar(pcCmd, cCommandBuffer);             /*  å˜é‡æ›¿æ¢                    */
     if (ulError) {
-        return  ((INT)(-ulError));                                      /*  Ìæ»»´íÎó                    */
+        return  ((INT)(-ulError));                                      /*  æ›¿æ¢é”™è¯¯                    */
     }
     
     __tshellPreTreatedBg(cCommandBuffer, 
-                         &bCmdLineNeedJoin, &bCmdLineNeedAsyn);         /*  Ô¤´¦Àí±³¾°Ö´ĞĞÏà¹Ø²ÎÊı      */
+                         &bCmdLineNeedJoin, &bCmdLineNeedAsyn);         /*  é¢„å¤„ç†èƒŒæ™¯æ‰§è¡Œç›¸å…³å‚æ•°      */
     
-    lib_strcpy(cCommandBg, cCommandBuffer);                             /*  ¿½±´¿ÉÄÜĞèÒªµÄ±³¾°Ö´ĞĞÃüÁî  */
+    lib_strcpy(cCommandBg, cCommandBuffer);                             /*  æ‹·è´å¯èƒ½éœ€è¦çš„èƒŒæ™¯æ‰§è¡Œå‘½ä»¤  */
     
-    ulError = __tshellStrKeyword(cCommandBuffer, cKeyword, &pcParam);   /*  ÌáÈ¡¹Ø¼ü×Ö                  */
+    ulError = __tshellStrKeyword(cCommandBuffer, cKeyword, &pcParam);   /*  æå–å…³é”®å­—                  */
     if (ulError) {
         /*
-         *  Èç¹û¹Ø¼ü×Ö¹ı³¤, ÕâÀï¿ÉÄÜÎª±äÁ¿¶¨Òå
+         *  å¦‚æœå…³é”®å­—è¿‡é•¿, è¿™é‡Œå¯èƒ½ä¸ºå˜é‡å®šä¹‰
          */
         ulError = __tshellVarDefine(cCommandBuffer);
-        return  ((INT)(-ulError));                                      /*  ÌáÈ¡´íÎó                    */
+        return  ((INT)(-ulError));                                      /*  æå–é”™è¯¯                    */
     }
     
     /*
-     *  Èç¹ûĞèÒª, µ÷ÓÃ pfuncHook º¯Êı.
+     *  å¦‚æœéœ€è¦, è°ƒç”¨ pfuncHook å‡½æ•°.
      */
     if (pfuncHook) {
         PCHAR   pcStartAlpha = cKeyword;
         while ((lib_isalpha(*pcStartAlpha) == 0) && 
-               (*pcStartAlpha != PX_EOS)) {                             /*  ´ÓµÚÒ»¸ö×Ö·û¿ªÊ¼            */
+               (*pcStartAlpha != PX_EOS)) {                             /*  ä»ç¬¬ä¸€ä¸ªå­—ç¬¦å¼€å§‹            */
             pcStartAlpha++;
         }
         if (*pcStartAlpha != PX_EOS) {
-            pfuncHook(API_ThreadIdSelf(), pcStartAlpha);                /*  µ÷ÓÃ»Øµ÷º¯Êı                */
+            pfuncHook(API_ThreadIdSelf(), pcStartAlpha);                /*  è°ƒç”¨å›è°ƒå‡½æ•°                */
         }
     }
     
     /*
-     *  Èç¹û´æÔÚ¿ÉÖ´ĞĞÎÄ¼şÔò, ÔòÓÅÏÈÔËĞĞÎÄ¼ş.
+     *  å¦‚æœå­˜åœ¨å¯æ‰§è¡Œæ–‡ä»¶åˆ™, åˆ™ä¼˜å…ˆè¿è¡Œæ–‡ä»¶.
      */
-#if LW_CFG_MODULELOADER_EN > 0                                          /*  Èç¹û´æÔÚÎÄ¼ş, ÔòÓÅÏÈÔËĞĞ    */
+#if LW_CFG_MODULELOADER_EN > 0                                          /*  å¦‚æœå­˜åœ¨æ–‡ä»¶, åˆ™ä¼˜å…ˆè¿è¡Œ    */
     if (!__tshellIsResCmd(cKeyword)) {
-        if (__tshellCheckFile(cKeyword)) {                              /*  ÓĞ¶ÔÓ¦ÎÄ¼ş                  */
-            lib_strcpy(cKeyword, "exec");                               /*  Ê¹ÓÃ exec ×ªÒåÃüÁîĞòÁĞ      */
-            pcParam = (PCHAR)cCommandBuffer;                            /*  ´ÓÃüÁîÍ·Æğ¿ªÊ¼¼ÆËã²ÎÊı      */
+        if (__tshellCheckFile(cKeyword)) {                              /*  æœ‰å¯¹åº”æ–‡ä»¶                  */
+            lib_strcpy(cKeyword, "exec");                               /*  ä½¿ç”¨ exec è½¬ä¹‰å‘½ä»¤åºåˆ—      */
+            pcParam = (PCHAR)cCommandBuffer;                            /*  ä»å‘½ä»¤å¤´èµ·å¼€å§‹è®¡ç®—å‚æ•°      */
         }
     }
 #endif                                                                  /*  LW_CFG_MODULELOADER_EN > 0  */
 
     /*
-     *  ²éÕÒ¹Ø¼ü×Ö.
+     *  æŸ¥æ‰¾å…³é”®å­—.
      */
-    if (ERROR_NONE != __tshellKeywordFind(cKeyword, &pskwNode)) {       /*  ²éÕÒ¹Ø¼ü×Ö                  */
+    if (ERROR_NONE != __tshellKeywordFind(cKeyword, &pskwNode)) {       /*  æŸ¥æ‰¾å…³é”®å­—                  */
         ulError = __tshellUndef(cCommandBuffer, cKeyword, &pcParam);
         if (ulError != ERROR_NONE) {
-            return  (-ERROR_TSHELL_CMDNOTFUND);                         /*  ÃüÁîÎ´ÕÒµ½                  */
+            return  (-ERROR_TSHELL_CMDNOTFUND);                         /*  å‘½ä»¤æœªæ‰¾åˆ°                  */
         }
-        return  (ERROR_NONE);                                           /*  ±äÁ¿¶¨Òå»òÕß¸³Öµ³É¹¦        */
+        return  (ERROR_NONE);                                           /*  å˜é‡å®šä¹‰æˆ–è€…èµ‹å€¼æˆåŠŸ        */
     }
     
     /*
-     *  ¼ì²é×¢²áÃüÁîÊÇ·ñĞèÒª±³¾°Ö´ĞĞ
+     *  æ£€æŸ¥æ³¨å†Œå‘½ä»¤æ˜¯å¦éœ€è¦èƒŒæ™¯æ‰§è¡Œ
      */
     LW_TCB_GET_CUR_SAFE(ptcbCur);
     
     if (((pskwNode->SK_ulOption & LW_OPTION_KEYWORD_SYNCBG) ||
          (pskwNode->SK_ulOption & LW_OPTION_KEYWORD_ASYNCBG)) &&
-        __TTINY_SHELL_GET_MAGIC(ptcbCur) != (ULONG)pskwNode) {          /*  ÅĞ¶ÏÊÇ·ñĞèÒª±³¾°Ö´ĞĞ        */
+        __TTINY_SHELL_GET_MAGIC(ptcbCur) != (ULONG)pskwNode) {          /*  åˆ¤æ–­æ˜¯å¦éœ€è¦èƒŒæ™¯æ‰§è¡Œ        */
         
         pcBgCmd    = cCommandBg;
         stBgCmdLen = lib_strlen(cCommandBg);
         ulMagic    = (ULONG)pskwNode;
-        iStdFd     = API_IoTaskStdGet(API_ThreadIdSelf(), STD_OUT);     /*  »ñµÃ±ê×¼ÎÄ¼ş                */
+        iStdFd     = API_IoTaskStdGet(API_ThreadIdSelf(), STD_OUT);     /*  è·å¾—æ ‡å‡†æ–‡ä»¶                */
         
         /*
-         *  Èç¹û±³¾°Ö´ĞĞ·½Ê½Óë shell ÃüÁîĞĞ·½Ê½³åÍ», ÔòÓÅÏÈÊ¹ÓÃÃüÁîĞĞµÄ·½Ê½
+         *  å¦‚æœèƒŒæ™¯æ‰§è¡Œæ–¹å¼ä¸ shell å‘½ä»¤è¡Œæ–¹å¼å†²çª, åˆ™ä¼˜å…ˆä½¿ç”¨å‘½ä»¤è¡Œçš„æ–¹å¼
          */
         if (bCmdLineNeedJoin) {
             bIsJoin = LW_TRUE;
@@ -649,7 +649,7 @@ INT  __tshellExec (CPCHAR  pcCommandExec, VOIDFUNCPTR  pfuncHook)
         } else if (bCmdLineNeedAsyn) {
             bIsJoin = LW_FALSE;
         
-        } else {                                                        /*  ÃüÁîĞĞÃ»ÓĞ±³¾°Ö´ĞĞ²ÎÊı      */
+        } else {                                                        /*  å‘½ä»¤è¡Œæ²¡æœ‰èƒŒæ™¯æ‰§è¡Œå‚æ•°      */
             if (pskwNode->SK_ulOption & LW_OPTION_KEYWORD_SYNCBG) {
                 bIsJoin = LW_TRUE;
             
@@ -659,15 +659,15 @@ INT  __tshellExec (CPCHAR  pcCommandExec, VOIDFUNCPTR  pfuncHook)
         }
         goto    __bg_run;
     
-    } else {                                                            /*  ÃüÁî±¾Éí·ÇÒªÇó±³¾°Ö´ĞĞ      */
+    } else {                                                            /*  å‘½ä»¤æœ¬èº«éè¦æ±‚èƒŒæ™¯æ‰§è¡Œ      */
         __TTINY_SHELL_SET_MAGIC(ptcbCur, 0ul);
         
-        if (bCmdLineNeedJoin || bCmdLineNeedAsyn) {                     /*  ÃüÁîĞĞ´øÓĞ±³¾°Ö´ĞĞ²ÎÊı      */
+        if (bCmdLineNeedJoin || bCmdLineNeedAsyn) {                     /*  å‘½ä»¤è¡Œå¸¦æœ‰èƒŒæ™¯æ‰§è¡Œå‚æ•°      */
             
             pcBgCmd    = cCommandBg;
             stBgCmdLen = lib_strlen(cCommandBg);
             ulMagic    = 0ul;
-            iStdFd     = API_IoTaskStdGet(API_ThreadIdSelf(), STD_OUT); /*  »ñµÃ±ê×¼ÎÄ¼ş                */
+            iStdFd     = API_IoTaskStdGet(API_ThreadIdSelf(), STD_OUT); /*  è·å¾—æ ‡å‡†æ–‡ä»¶                */
             
             if (bCmdLineNeedJoin) {
                 bIsJoin = LW_TRUE;
@@ -681,47 +681,47 @@ INT  __tshellExec (CPCHAR  pcCommandExec, VOIDFUNCPTR  pfuncHook)
     }
     
     pcParamList[0] = cKeyword;
-    if (!pcParam) {                                                     /*  ¼ì²éÊÇ·ñ´æÔÚ²ÎÊı            */
-        REGISTER INT iRet = pskwNode->SK_pfuncCommand(1, pcParamList);  /*  Ö´ĞĞÃüÁî,Ã»ÓĞ²ÎÊı           */
+    if (!pcParam) {                                                     /*  æ£€æŸ¥æ˜¯å¦å­˜åœ¨å‚æ•°            */
+        REGISTER INT iRet = pskwNode->SK_pfuncCommand(1, pcParamList);  /*  æ‰§è¡Œå‘½ä»¤,æ²¡æœ‰å‚æ•°           */
         return  (iRet);
     }
     
-    pcParamList[1] = pcParam;                                           /*  µÚÒ»¸ö²ÎÊıµØÖ·              */
-    for (i = 1; i < LW_CFG_SHELL_MAX_PARAMNUM; i++) {                   /*  ¿ªÊ¼²éÑ¯²ÎÊı                */
+    pcParamList[1] = pcParam;                                           /*  ç¬¬ä¸€ä¸ªå‚æ•°åœ°å€              */
+    for (i = 1; i < LW_CFG_SHELL_MAX_PARAMNUM; i++) {                   /*  å¼€å§‹æŸ¥è¯¢å‚æ•°                */
         __tshellStrGetToken(pcParamList[i], 
                             &pcParamList[i + 1]);
-        __tshellStrDelTransChar(pcParamList[i], pcParamList[i]);        /*  É¾³ı×ªÒå×Ö·ûÓë·Ç×ªÒåÒıºÅ    */
-        if (pcParamList[i + 1] == LW_NULL) {                            /*  ²ÎÊı½áÊø                    */
+        __tshellStrDelTransChar(pcParamList[i], pcParamList[i]);        /*  åˆ é™¤è½¬ä¹‰å­—ç¬¦ä¸éè½¬ä¹‰å¼•å·    */
+        if (pcParamList[i + 1] == LW_NULL) {                            /*  å‚æ•°ç»“æŸ                    */
             break;
         }
     }
-                                                                        /*  Ö´ĞĞÃüÁî                    */
+                                                                        /*  æ‰§è¡Œå‘½ä»¤                    */
     return  (__tshellWrapper(pskwNode->SK_pfuncCommand, i + 1, pcParamList));
     
-__bg_run:                                                               /*  Òì²½Ö´ĞĞÃüÁî                */
+__bg_run:                                                               /*  å¼‚æ­¥æ‰§è¡Œå‘½ä»¤                */
     return  (__tshellBgCreate(iStdFd, pcBgCmd, stBgCmdLen, 
                               pskwNode->SK_ulOption,
-                              bIsJoin, ulMagic));                       /*  ´´½¨±³¾°Ïß³ÌÖ´ĞĞÃüÁî        */
+                              bIsJoin, ulMagic));                       /*  åˆ›å»ºèƒŒæ™¯çº¿ç¨‹æ‰§è¡Œå‘½ä»¤        */
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellPromptFree
-** ¹¦ÄÜÃèÊö: ttiny shell É¾³ıÃüÁîÌáÊ¾·û»º´æ
-** Êä¡¡Èë  : ptpc      ÃüÁîÌáÊ¾·ûÉÏÏÂÎÄ
-** Êä¡¡³ö  : NONE
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellPromptFree
+** åŠŸèƒ½æè¿°: ttiny shell åˆ é™¤å‘½ä»¤æç¤ºç¬¦ç¼“å­˜
+** è¾“ã€€å…¥  : ptpc      å‘½ä»¤æç¤ºç¬¦ä¸Šä¸‹æ–‡
+** è¾“ã€€å‡º  : NONE
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 static VOID __tshellPromptFree (__PTSHELL_PROMPT_CTX  ptpc)
 {
     __SHEAP_FREE(ptpc);
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellShowPrompt
-** ¹¦ÄÜÃèÊö: ttiny shell ÏÔÊ¾ÃüÁîÌáÊ¾·û
-** Êä¡¡Èë  : NONE
-** Êä¡¡³ö  : NONE
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellShowPrompt
+** åŠŸèƒ½æè¿°: ttiny shell æ˜¾ç¤ºå‘½ä»¤æç¤ºç¬¦
+** è¾“ã€€å…¥  : NONE
+** è¾“ã€€å‡º  : NONE
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 VOID  __tshellShowPrompt (VOID)
 {
@@ -736,9 +736,9 @@ VOID  __tshellShowPrompt (VOID)
     getwd(cPrompt);
     
     if (geteuid() == 0) {
-        cPrivilege = '#';                                           /*  ÌØÈ¨ÓÃ»§                        */
+        cPrivilege = '#';                                           /*  ç‰¹æƒç”¨æˆ·                        */
     } else {
-        cPrivilege = '$';                                           /*  ·ÇÌØÈ¨ÓÃ»§                      */
+        cPrivilege = '$';                                           /*  éç‰¹æƒç”¨æˆ·                      */
     }
     
     if (__TTINY_SHELL_GET_OPT(ptcbCur) & LW_OPTION_TSHELL_PROMPT_FULL) {
@@ -767,7 +767,7 @@ VOID  __tshellShowPrompt (VOID)
                 (API_TShellVarGetRt("TERM_PS_COLOR", &ptpc->TPC_cPsColor[2], 10) > 0)) {
                 ptpc->TPC_cPsColor[0] = '\033';
                 ptpc->TPC_cPsColor[1] = '[';
-                lib_strlcat(ptpc->TPC_cPsColor, "m", 12);               /*  ÃüÁîÌáÊ¾·ûÉ«²Ê              */
+                lib_strlcat(ptpc->TPC_cPsColor, "m", 12);               /*  å‘½ä»¤æç¤ºç¬¦è‰²å½©              */
                 API_TShellColorGet(S_IFDIR, ptpc->TPC_cDirColor, 12);
                 API_TShellColorGet(0, ptpc->TPC_cNorColor, 12);
                 
@@ -778,7 +778,7 @@ VOID  __tshellShowPrompt (VOID)
             }
         }
         
-        if (ptpc->TPC_uid != getuid()) {                                /*  ÓĞÓÃ»§¸Ä±ä                  */
+        if (ptpc->TPC_uid != getuid()) {                                /*  æœ‰ç”¨æˆ·æ”¹å˜                  */
             ptpc->TPC_uid  = getuid();
             
             if (API_TShellGetUserName(ptpc->TPC_uid, 
@@ -795,7 +795,7 @@ VOID  __tshellShowPrompt (VOID)
             printf("[%s%s@%s%s:%s%s%s]%c ", 
                    ptpc->TPC_cPsColor, pcUserName, cHostName, ptpc->TPC_cNorColor,
                    ptpc->TPC_cDirColor, cPrompt, ptpc->TPC_cNorColor,
-                   cPrivilege);                                         /*  ÏÔÊ¾µ±Ç°Â·¾¶                */
+                   cPrivilege);                                         /*  æ˜¾ç¤ºå½“å‰è·¯å¾„                */
         
         } else {
             printf("[%s%s@%s%s:%s/%s]%c ",
@@ -807,22 +807,22 @@ VOID  __tshellShowPrompt (VOID)
 __simple:
         pcSeparator = lib_strrchr(cPrompt, PX_DIVIDER);
         if (pcSeparator) {
-            printf("[%s]%c ", cPrompt, cPrivilege);                     /*  ÏÔÊ¾µ±Ç°Â·¾¶                */
+            printf("[%s]%c ", cPrompt, cPrivilege);                     /*  æ˜¾ç¤ºå½“å‰è·¯å¾„                */
         } else {
             printf("[/]%c ", cPrivilege);
         }
     }
     
-    fflush(stdout);                                                     /*  ±£Ö¤ stdout µÄÊä³ö          */
+    fflush(stdout);                                                     /*  ä¿è¯ stdout çš„è¾“å‡º          */
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellRestartEx
-** ¹¦ÄÜÃèÊö: ttiny shell Ïß³ÌÖØÆô
-** Êä¡¡Èë  : ulThread      Ïß³Ì¾ä±ú
-**           bNeedAuthen   ÊÇ·ñĞèÒªµÇÂ¼
-** Êä¡¡³ö  : ERROR or OK
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellRestartEx
+** åŠŸèƒ½æè¿°: ttiny shell çº¿ç¨‹é‡å¯
+** è¾“ã€€å…¥  : ulThread      çº¿ç¨‹å¥æŸ„
+**           bNeedAuthen   æ˜¯å¦éœ€è¦ç™»å½•
+** è¾“ã€€å‡º  : ERROR or OK
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 INT  __tshellRestartEx (LW_OBJECT_HANDLE  ulThread, BOOL  bNeedAuthen)
 {
@@ -845,18 +845,18 @@ INT  __tshellRestartEx (LW_OBJECT_HANDLE  ulThread, BOOL  bNeedAuthen)
     
     usIndex = _ObjectGetIndex(ulThread);
     
-    __KERNEL_ENTER();                                                   /*  ½øÈëÄÚºË                    */
+    __KERNEL_ENTER();                                                   /*  è¿›å…¥å†…æ ¸                    */
     if (_Thread_Invalid(usIndex)) {
-        __KERNEL_EXIT();                                                /*  ÍË³öÄÚºË                    */
+        __KERNEL_EXIT();                                                /*  é€€å‡ºå†…æ ¸                    */
         _ErrorHandle(EINVAL);
         return  (PX_ERROR);
     }
     
     ptcbShell = __GET_TCB_FROM_INDEX(usIndex);
     ptcbJoin  = ptcbShell->TCB_ptcbJoin;
-    if (ptcbJoin) {                                                     /*  µÈ´ıÆäËûÏß³Ì½áÊø            */
+    if (ptcbJoin) {                                                     /*  ç­‰å¾…å…¶ä»–çº¿ç¨‹ç»“æŸ            */
         if (bNeedAuthen) {
-            __KERNEL_EXIT();                                            /*  ÍË³öÄÚºË                    */
+            __KERNEL_EXIT();                                            /*  é€€å‡ºå†…æ ¸                    */
             _ErrorHandle(EBUSY);
             return  (PX_ERROR);
         }
@@ -869,24 +869,24 @@ INT  __tshellRestartEx (LW_OBJECT_HANDLE  ulThread, BOOL  bNeedAuthen)
             ulOption |= LW_OPTION_TSHELL_AUTHEN | LW_OPTION_TSHELL_LOOPLOGIN;
         
         } else {
-            ulOption |= LW_OPTION_TSHELL_NOLOGO;                        /*  ÖØÆôÊ±²»ĞèÒªÏÔÊ¾ logo       */
-            ulOption &= ~LW_OPTION_TSHELL_AUTHEN;                       /*  ÖØÆôÊ±²»ĞèÒªÓÃ»§ÈÏÖ¤        */
+            ulOption |= LW_OPTION_TSHELL_NOLOGO;                        /*  é‡å¯æ—¶ä¸éœ€è¦æ˜¾ç¤º logo       */
+            ulOption &= ~LW_OPTION_TSHELL_AUTHEN;                       /*  é‡å¯æ—¶ä¸éœ€è¦ç”¨æˆ·è®¤è¯        */
         }
         __TTINY_SHELL_SET_OPT(ptcbShell, ulOption);
     }
     
-    __KERNEL_EXIT();                                                    /*  ÍË³öÄÚºË                    */
+    __KERNEL_EXIT();                                                    /*  é€€å‡ºå†…æ ¸                    */
     
     if (ulJoin) {
 #if LW_CFG_SIGNAL_EN > 0
 #if LW_CFG_MODULELOADER_EN > 0
         pid_t pid = vprocGetPidByThread(ulJoin);
         if (pid > 0) {
-            kill(pid, SIGKILL);                                         /*  É±ËÀµÈ´ıµÄ½ø³Ì              */
+            kill(pid, SIGKILL);                                         /*  æ€æ­»ç­‰å¾…çš„è¿›ç¨‹              */
         } else
 #endif                                                                  /*  LW_CFG_MODULELOADER_EN > 0  */
         {
-            kill(ulJoin, SIGKILL);                                      /*  É±ËÀµÈ´ıµÄÏß³Ì              */
+            kill(ulJoin, SIGKILL);                                      /*  æ€æ­»ç­‰å¾…çš„çº¿ç¨‹              */
         }
 #else
         API_ThreadDelete(&ulJoin, LW_NULL);
@@ -896,7 +896,7 @@ INT  __tshellRestartEx (LW_OBJECT_HANDLE  ulThread, BOOL  bNeedAuthen)
             fdprintf(iMsg, "[sh]Warning: Program is killed (SIGKILL) by shell.\n"
                            "    Restart SylixOS is recommended!\n");
         }
-    } else {                                                            /*  ÖØÆôÏß³Ì                    */
+    } else {                                                            /*  é‡å¯çº¿ç¨‹                    */
         __tshellHistoryBackup(ptcbShell);
 
         API_ThreadRestart(ulThread, (PVOID)(LONG)__TTINY_SHELL_GET_STDFILE(ptcbShell));
@@ -905,25 +905,25 @@ INT  __tshellRestartEx (LW_OBJECT_HANDLE  ulThread, BOOL  bNeedAuthen)
     return  (ERROR_NONE);
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellRestart
-** ¹¦ÄÜÃèÊö: ttiny shell Ïß³ÌÖØÆô (control-C)
-** Êä¡¡Èë  : ulThread   Ïß³Ì¾ä±ú
-** Êä¡¡³ö  : NONE
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellRestart
+** åŠŸèƒ½æè¿°: ttiny shell çº¿ç¨‹é‡å¯ (control-C)
+** è¾“ã€€å…¥  : ulThread   çº¿ç¨‹å¥æŸ„
+** è¾“ã€€å‡º  : NONE
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 static VOID  __tshellRestart (LW_OBJECT_HANDLE  ulThread)
 {
     __tshellRestartEx(ulThread, LW_FALSE);
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellRename
-** ¹¦ÄÜÃèÊö: ttiny shell Ïß³ÌÉèÖÃÃû×Ö
-** Êä¡¡Èë  : ulThread   Ïß³Ì¾ä±ú
-**           pcName     ĞÂÃû×Ö
-** Êä¡¡³ö  : NONE
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellRename
+** åŠŸèƒ½æè¿°: ttiny shell çº¿ç¨‹è®¾ç½®åå­—
+** è¾“ã€€å…¥  : ulThread   çº¿ç¨‹å¥æŸ„
+**           pcName     æ–°åå­—
+** è¾“ã€€å‡º  : NONE
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 static VOID  __tshellRename (LW_OBJECT_HANDLE  ulThread, CPCHAR  pcName)
 {
@@ -940,12 +940,12 @@ static VOID  __tshellRename (LW_OBJECT_HANDLE  ulThread, CPCHAR  pcName)
     API_ThreadSetName(ulThread, cNewName);
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellBackgroundCleanup
-** ¹¦ÄÜÃèÊö: ttiny shell ±³¾°ÔËĞĞ·şÎñÏß³ÌÇå³ı»º´æĞÅÏ¢º¯Êı
-** Êä¡¡Èë  : pvArg      ĞèÒªÇå³ıµÄÄÚ´æ
-** Êä¡¡³ö  : NONE
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellBackgroundCleanup
+** åŠŸèƒ½æè¿°: ttiny shell èƒŒæ™¯è¿è¡ŒæœåŠ¡çº¿ç¨‹æ¸…é™¤ç¼“å­˜ä¿¡æ¯å‡½æ•°
+** è¾“ã€€å…¥  : pvArg      éœ€è¦æ¸…é™¤çš„å†…å­˜
+** è¾“ã€€å‡º  : NONE
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 static VOID  __tshellBackgroundCleanup (PVOID  pvArg)
 {
@@ -953,27 +953,27 @@ static VOID  __tshellBackgroundCleanup (PVOID  pvArg)
              INT                    i;
              
     if (tsbg) {
-        __KERNEL_SPACE_ENTER();                                         /*  ÕâĞ©ÎÄ¼ş´´½¨Ê±±£Ö¤ÊÇÄÚºËÀïµÄ*/
+        __KERNEL_SPACE_ENTER();                                         /*  è¿™äº›æ–‡ä»¶åˆ›å»ºæ—¶ä¿è¯æ˜¯å†…æ ¸é‡Œçš„*/
         for (i = 0; i < 3; i++) {
             if (tsbg->TSBG_bClosed[i]) {
-                close(tsbg->TSBG_iFd[i]);                               /*  ¹Ø±Õ¶ÔÓ¦µÄ±ê×¼ÎÄ¼ş          */
+                close(tsbg->TSBG_iFd[i]);                               /*  å…³é—­å¯¹åº”çš„æ ‡å‡†æ–‡ä»¶          */
             }
         }
         __KERNEL_SPACE_EXIT();
     
         if (tsbg->TSBG_pcDefPath) {
-            __SHEAP_FREE(tsbg->TSBG_pcDefPath);                         /*  ÊÍ·ÅÄ¿Â¼»º´æ                */
+            __SHEAP_FREE(tsbg->TSBG_pcDefPath);                         /*  é‡Šæ”¾ç›®å½•ç¼“å­˜                */
         }
-        __SHEAP_FREE(tsbg);                                             /*  ÊÍ·ÅÄÚ´æ                    */
+        __SHEAP_FREE(tsbg);                                             /*  é‡Šæ”¾å†…å­˜                    */
     }
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellBackground
-** ¹¦ÄÜÃèÊö: ttiny shell ±³¾°ÔËĞĞ·şÎñÏß³Ì
-** Êä¡¡Èë  : pcArg      ·şÎñÖÕ¶ËÎÄ¼ş
-** Êä¡¡³ö  : NONE
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellBackground
+** åŠŸèƒ½æè¿°: ttiny shell èƒŒæ™¯è¿è¡ŒæœåŠ¡çº¿ç¨‹
+** è¾“ã€€å…¥  : pcArg      æœåŠ¡ç»ˆç«¯æ–‡ä»¶
+** è¾“ã€€å‡º  : NONE
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 static PVOID  __tshellBackground (PVOID  pvArg)
 {
@@ -982,25 +982,25 @@ static PVOID  __tshellBackground (PVOID  pvArg)
              LW_OBJECT_HANDLE           ulMe = API_ThreadIdSelf();
     
     /*
-     *  ÔÚÔËĞĞµ½Çå³ıº¯ÊıÖ®Ç°, ±¾Ïß³Ì²»ÄÜ±»É¾³ı, ·ñÔò pvArg ·ÖÅäµÄÄÚ´æ½«ÎŞ·¨»ØÊÕ.
+     *  åœ¨è¿è¡Œåˆ°æ¸…é™¤å‡½æ•°ä¹‹å‰, æœ¬çº¿ç¨‹ä¸èƒ½è¢«åˆ é™¤, å¦åˆ™ pvArg åˆ†é…çš„å†…å­˜å°†æ— æ³•å›æ”¶.
      */
-    API_ThreadCleanupPush(__tshellBackgroundCleanup, pvArg);            /*  ½¨Á¢Çå³ıº¯Êı                */
+    API_ThreadCleanupPush(__tshellBackgroundCleanup, pvArg);            /*  å»ºç«‹æ¸…é™¤å‡½æ•°                */
     
-    if (ioPrivateEnv() < 0) {                                           /*  Ê¹ÓÃË½ÓĞÏß³Ì io »·¾³        */
+    if (ioPrivateEnv() < 0) {                                           /*  ä½¿ç”¨ç§æœ‰çº¿ç¨‹ io ç¯å¢ƒ        */
         return  (LW_NULL);
     } else {
-        chdir(tsbg->TSBG_pcDefPath);                                    /*  ¼Ì³Ğ¸¸Ïµ io µ±Ç°Ä¿Â¼        */
+        chdir(tsbg->TSBG_pcDefPath);                                    /*  ç»§æ‰¿çˆ¶ç³» io å½“å‰ç›®å½•        */
     }
     
-    API_IoTaskStdSet(ulMe, STD_IN,  tsbg->TSBG_iFd[0]);                 /*  I/O ÖØ¶¨Ïò                  */
+    API_IoTaskStdSet(ulMe, STD_IN,  tsbg->TSBG_iFd[0]);                 /*  I/O é‡å®šå‘                  */
     API_IoTaskStdSet(ulMe, STD_OUT, tsbg->TSBG_iFd[1]);
     API_IoTaskStdSet(ulMe, STD_ERR, tsbg->TSBG_iFd[2]);
     
-    iRetValue = __tshellExec(tsbg->TSBG_cCommand,                       /*  Ö´ĞĞ shell Ö¸Áî             */
-                             __tshellRename);                           /*  Í¬Ê±ÉèÖÃÏß³ÌµÄÃû×Ö          */
-    if ((iRetValue < 0) && !tsbg->TSBG_bIsJoin) {                       /*  ³öÏÖ´íÎóÇÒshÃ»ÓĞµÈ´ı´ËÏß³Ì  */
+    iRetValue = __tshellExec(tsbg->TSBG_cCommand,                       /*  æ‰§è¡Œ shell æŒ‡ä»¤             */
+                             __tshellRename);                           /*  åŒæ—¶è®¾ç½®çº¿ç¨‹çš„åå­—          */
+    if ((iRetValue < 0) && !tsbg->TSBG_bIsJoin) {                       /*  å‡ºç°é”™è¯¯ä¸”shæ²¡æœ‰ç­‰å¾…æ­¤çº¿ç¨‹  */
         
-        switch (iRetValue) {                                            /*  ÏµÍ³¼¶´íÎóÌáÊ¾              */
+        switch (iRetValue) {                                            /*  ç³»ç»Ÿçº§é”™è¯¯æç¤º              */
         
         case -ERROR_TSHELL_EPARAM:
             fprintf(stderr, "parameter(s) error.\n");
@@ -1019,33 +1019,33 @@ static PVOID  __tshellBackground (PVOID  pvArg)
             break;
         }
         
-        API_TShellTermAlert(STD_OUT);                                   /*  ²úÉúÏìÁå                    */
+        API_TShellTermAlert(STD_OUT);                                   /*  äº§ç”Ÿå“é“ƒ                    */
     }
     
     /*
-     *  ¼ÇÂ¼µ±Ç° shell ÃüÁî²úÉúµÄ´íÎó.
+     *  è®°å½•å½“å‰ shell å‘½ä»¤äº§ç”Ÿçš„é”™è¯¯.
      */
     __TTINY_SHELL_SET_ERROR(API_ThreadTcbSelf(), iRetValue);
     
-    API_ThreadCleanupPop(LW_TRUE);                                      /*  ÔËĞĞÇå³ıº¯Êı                */
+    API_ThreadCleanupPop(LW_TRUE);                                      /*  è¿è¡Œæ¸…é™¤å‡½æ•°                */
     
-    return  ((PVOID)(LONG)iRetValue);                                   /*  ·µ»ØÃüÁîÖ´ĞĞ½á¹û            */
+    return  ((PVOID)(LONG)iRetValue);                                   /*  è¿”å›å‘½ä»¤æ‰§è¡Œç»“æœ            */
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellBgCreateEx
-** ¹¦ÄÜÃèÊö: ttiny shell ´´½¨±³¾°ÔËĞĞ·şÎñÏß³Ì (pid ¼Ì³Ğµ÷ÓÃÕß)
-** Êä¡¡Èë  : iFd[3]         ±ê×¼ÎÄ¼ş
-**           pcCommand      ĞèÒªÖ´ĞĞµÄÃüÁî
-**           stCommandLen   ÃüÁî³¤¶È
-**           ulKeywordOpt   ¹Ø¼ü×ÖÑ¡Ïî
-**           bIsJoin        ÊÇ·ñµÈ´ıÃüÁî½áÊø.
-**           ulMagic        Ê¶±ğºÅ
-**           pulSh          ±³¾°Ïß³Ì¾ä±ú (½öµ± bIsJoin = LW_FALSE Ê±·µ»Ø)
-**           piRet          ÃüÁî·µ»ØÖµ
-** Êä¡¡³ö  : Èç¹ûÊÇÍ¬²½Ö´ĞĞ, Ôò·µ»ØÖ´ĞĞÃüÁî½á¹û.
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
-** ×¢  Òâ  : ÕâÀïÆô¶¯Ê±ÎªÄÚºËÏß³Ì, Èç¹ûÔËĞĞµÄÃüÁîĞèÒª×ª»»Îª½ø³Ì, ÕâÀïÃ»ÓĞÎÊÌâ.
+** å‡½æ•°åç§°: __tshellBgCreateEx
+** åŠŸèƒ½æè¿°: ttiny shell åˆ›å»ºèƒŒæ™¯è¿è¡ŒæœåŠ¡çº¿ç¨‹ (pid ç»§æ‰¿è°ƒç”¨è€…)
+** è¾“ã€€å…¥  : iFd[3]         æ ‡å‡†æ–‡ä»¶
+**           pcCommand      éœ€è¦æ‰§è¡Œçš„å‘½ä»¤
+**           stCommandLen   å‘½ä»¤é•¿åº¦
+**           ulKeywordOpt   å…³é”®å­—é€‰é¡¹
+**           bIsJoin        æ˜¯å¦ç­‰å¾…å‘½ä»¤ç»“æŸ.
+**           ulMagic        è¯†åˆ«å·
+**           pulSh          èƒŒæ™¯çº¿ç¨‹å¥æŸ„ (ä»…å½“ bIsJoin = LW_FALSE æ—¶è¿”å›)
+**           piRet          å‘½ä»¤è¿”å›å€¼
+** è¾“ã€€å‡º  : å¦‚æœæ˜¯åŒæ­¥æ‰§è¡Œ, åˆ™è¿”å›æ‰§è¡Œå‘½ä»¤ç»“æœ.
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
+** æ³¨  æ„  : è¿™é‡Œå¯åŠ¨æ—¶ä¸ºå†…æ ¸çº¿ç¨‹, å¦‚æœè¿è¡Œçš„å‘½ä»¤éœ€è¦è½¬æ¢ä¸ºè¿›ç¨‹, è¿™é‡Œæ²¡æœ‰é—®é¢˜.
 *********************************************************************************************************/
 INT    __tshellBgCreateEx (INT               iFd[3],
                            BOOL              bClosed[3],
@@ -1060,7 +1060,7 @@ INT    __tshellBgCreateEx (INT               iFd[3],
     REGISTER __PTSHELL_BACKGROUND       tsbg;
              LW_CLASS_THREADATTR        threadattrTShell;
              LW_OBJECT_HANDLE           hTShellHandle;
-             LONG                       lRetValue = ERROR_NONE;         /*  LONG ±£Ö¤ 64 Î» CPU ¶ÔÆë    */
+             LONG                       lRetValue = ERROR_NONE;         /*  LONG ä¿è¯ 64 ä½ CPU å¯¹é½    */
              
              PLW_CLASS_TCB              ptcbShellBg;
              PLW_CLASS_TCB              ptcbCur;
@@ -1073,7 +1073,7 @@ INT    __tshellBgCreateEx (INT               iFd[3],
     ulOption = __TTINY_SHELL_GET_OPT(ptcbCur);
 
     __KERNEL_SPACE_ENTER();
-    if (!isatty(iFd[1])) {                                              /*  ÄÚºËÎÄ¼şÃèÊö·ûÊÇ·ñÎª tty    */
+    if (!isatty(iFd[1])) {                                              /*  å†…æ ¸æ–‡ä»¶æè¿°ç¬¦æ˜¯å¦ä¸º tty    */
         ulOption &= ~LW_OPTION_TSHELL_VT100;
     }
     __KERNEL_SPACE_EXIT();
@@ -1093,7 +1093,7 @@ INT    __tshellBgCreateEx (INT               iFd[3],
         _ErrorHandle(ERROR_SYSTEM_LOW_MEMORY);
         return  (PX_ERROR);
     }
-    lib_strlcpy(tsbg->TSBG_pcDefPath, _PathGetDef(), stSize);           /*  ¿½±´¸¸Ïµµ±Ç°Ä¿Â¼            */
+    lib_strlcpy(tsbg->TSBG_pcDefPath, _PathGetDef(), stSize);           /*  æ‹·è´çˆ¶ç³»å½“å‰ç›®å½•            */
     
     tsbg->TSBG_iFd[0] = iFd[0];
     tsbg->TSBG_iFd[1] = iFd[1];
@@ -1114,13 +1114,13 @@ INT    __tshellBgCreateEx (INT               iFd[3],
 #endif
     
     API_ThreadAttrBuild(&threadattrTShell,
-                        _G_stShellStackSize,                            /*  shell ¶ÑÕ»´óĞ¡              */
+                        _G_stShellStackSize,                            /*  shell å †æ ˆå¤§å°              */
                         LW_PRIO_T_SHELL,
                         ulTaskOpt,
-                        (PVOID)tsbg);                                   /*  ¹¹½¨ÊôĞÔ¿é                  */
+                        (PVOID)tsbg);                                   /*  æ„å»ºå±æ€§å—                  */
                         
     hTShellHandle = API_ThreadInit("t_tshellbg", __tshellBackground,
-                                   &threadattrTShell, LW_NULL);         /*  ´´½¨ tshell Ïß³Ì            */
+                                   &threadattrTShell, LW_NULL);         /*  åˆ›å»º tshell çº¿ç¨‹            */
     if (!hTShellHandle) {
         __SHEAP_FREE(tsbg->TSBG_pcDefPath);
         __SHEAP_FREE(tsbg);
@@ -1133,7 +1133,7 @@ INT    __tshellBgCreateEx (INT               iFd[3],
     
     ptcbShellBg = __GET_TCB_FROM_INDEX(_ObjectGetIndex(hTShellHandle));
     __TTINY_SHELL_SET_OPT(ptcbShellBg, ulOption);
-    __TTINY_SHELL_SET_MAGIC(ptcbShellBg, ulMagic);                      /*  ¼ÇÂ¼Ê¶±ğºÅ                  */
+    __TTINY_SHELL_SET_MAGIC(ptcbShellBg, ulMagic);                      /*  è®°å½•è¯†åˆ«å·                  */
     
     if (pulSh && (bIsJoin == LW_FALSE)) {
         *pulSh = hTShellHandle;
@@ -1142,8 +1142,8 @@ INT    __tshellBgCreateEx (INT               iFd[3],
         *pulSh = LW_OBJECT_HANDLE_INVALID;
     }
     
-    API_ThreadStartEx(hTShellHandle, bIsJoin, (PVOID *)&lRetValue);     /*  Æô¶¯ shell Ïß³Ì             */
-    __TTINY_SHELL_SET_ERROR(ptcbCur, (INT)lRetValue);                   /*  ¼ÇÂ¼ shell ÃüÁî²úÉúµÄ´íÎó   */
+    API_ThreadStartEx(hTShellHandle, bIsJoin, (PVOID *)&lRetValue);     /*  å¯åŠ¨ shell çº¿ç¨‹             */
+    __TTINY_SHELL_SET_ERROR(ptcbCur, (INT)lRetValue);                   /*  è®°å½• shell å‘½ä»¤äº§ç”Ÿçš„é”™è¯¯   */
     
     if (piRet) {
         *piRet = (INT)lRetValue;
@@ -1152,17 +1152,17 @@ INT    __tshellBgCreateEx (INT               iFd[3],
     return  (ERROR_NONE);
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellBgCreate
-** ¹¦ÄÜÃèÊö: ttiny shell ´´½¨±³¾°ÔËĞĞ·şÎñÏß³Ì
-** Êä¡¡Èë  : iFd            ÎÄ¼şÃèÊö·û
-**           pcCommand      ĞèÒªÖ´ĞĞµÄÃüÁî
-**           stCommandLen   ÃüÁî³¤¶È
-**           ulKeywordOpt   ¹Ø¼ü×ÖÑ¡Ïî
-**           bIsJoin        ÊÇ·ñµÈ´ıÃüÁî½áÊø.
-**           ulMagic        Ê¶±ğºÅ
-** Êä¡¡³ö  : Èç¹ûÊÇÍ¬²½Ö´ĞĞ, Ôò·µ»ØÖ´ĞĞÃüÁî½á¹û.
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellBgCreate
+** åŠŸèƒ½æè¿°: ttiny shell åˆ›å»ºèƒŒæ™¯è¿è¡ŒæœåŠ¡çº¿ç¨‹
+** è¾“ã€€å…¥  : iFd            æ–‡ä»¶æè¿°ç¬¦
+**           pcCommand      éœ€è¦æ‰§è¡Œçš„å‘½ä»¤
+**           stCommandLen   å‘½ä»¤é•¿åº¦
+**           ulKeywordOpt   å…³é”®å­—é€‰é¡¹
+**           bIsJoin        æ˜¯å¦ç­‰å¾…å‘½ä»¤ç»“æŸ.
+**           ulMagic        è¯†åˆ«å·
+** è¾“ã€€å‡º  : å¦‚æœæ˜¯åŒæ­¥æ‰§è¡Œ, åˆ™è¿”å›æ‰§è¡Œå‘½ä»¤ç»“æœ.
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 static INT    __tshellBgCreate (INT     iFd, 
                                 CPCHAR  pcCommand, 
@@ -1174,7 +1174,7 @@ static INT    __tshellBgCreate (INT     iFd,
     INT  iError;
     INT  iRet;
     INT  iFdArry[3];
-    BOOL bClosed[3] = {LW_FALSE, LW_FALSE, LW_FALSE};                   /*  ²»¹Ø±Õ±ê×¼°æÎÄ¼ş            */
+    BOOL bClosed[3] = {LW_FALSE, LW_FALSE, LW_FALSE};                   /*  ä¸å…³é—­æ ‡å‡†ç‰ˆæ–‡ä»¶            */
     
     iFdArry[0] = iFd;
     iFdArry[1] = iFd;
@@ -1189,18 +1189,18 @@ static INT    __tshellBgCreate (INT     iFd,
     return  (iRet);
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellCloseFd
-** ¹¦ÄÜÃèÊö: ttiny shell ÄÚºËÏß³ÌÍË³öÊ±ĞèÒª¼ì²éÊÇ·ñĞèÒª¹Ø±ÕÎÄ¼ş
-** Êä¡¡Èë  : ptcb          shell TCB
-** Êä¡¡³ö  : NONE
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellCloseFd
+** åŠŸèƒ½æè¿°: ttiny shell å†…æ ¸çº¿ç¨‹é€€å‡ºæ—¶éœ€è¦æ£€æŸ¥æ˜¯å¦éœ€è¦å…³é—­æ–‡ä»¶
+** è¾“ã€€å…¥  : ptcb          shell TCB
+** è¾“ã€€å‡º  : NONE
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 static VOID  __tshellCloseFd (PLW_CLASS_TCB  ptcb)
 {
     INT     iFd;
 
-    if (ptcb->TCB_iDeleteProcStatus == LW_TCB_DELETE_PROC_DEL) {        /*  ÕıÔÚ±»É¾³ı                  */
+    if (ptcb->TCB_iDeleteProcStatus == LW_TCB_DELETE_PROC_DEL) {        /*  æ­£åœ¨è¢«åˆ é™¤                  */
         if (__TTINY_SHELL_GET_OPT(ptcb) & LW_OPTION_TSHELL_CLOSE_FD) {
             iFd = __TTINY_SHELL_GET_STDFILE(ptcb);
             if (iFd >= 0) {
@@ -1210,12 +1210,12 @@ static VOID  __tshellCloseFd (PLW_CLASS_TCB  ptcb)
     }
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellThread
-** ¹¦ÄÜÃèÊö: ttiny shell ·şÎñÏß³Ì
-** Êä¡¡Èë  : pcArg      ·şÎñÖÕ¶ËÎÄ¼ş
-** Êä¡¡³ö  : NONE
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellThread
+** åŠŸèƒ½æè¿°: ttiny shell æœåŠ¡çº¿ç¨‹
+** è¾“ã€€å…¥  : pcArg      æœåŠ¡ç»ˆç«¯æ–‡ä»¶
+** è¾“ã€€å‡º  : NONE
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 PVOID   __tshellThread (PVOID  pcArg)
 {
@@ -1231,36 +1231,36 @@ PVOID   __tshellThread (PVOID  pcArg)
 
     LW_TCB_GET_CUR_SAFE(ptcbCur);
 
-    __TTINY_SHELL_SET_STDFILE(ptcbCur, iTtyFd);                         /*  ÈÎÎñÉÏÏÂÎÄÖĞ±£´æ±ê×¼ÎÄ¼ş    */
+    __TTINY_SHELL_SET_STDFILE(ptcbCur, iTtyFd);                         /*  ä»»åŠ¡ä¸Šä¸‹æ–‡ä¸­ä¿å­˜æ ‡å‡†æ–‡ä»¶    */
 
-    API_ThreadCleanupPush(__tshellCloseFd, ptcbCur);                    /*  ³õÊ¼»¯Çå³ıº¯Êı              */
+    API_ThreadCleanupPush(__tshellCloseFd, ptcbCur);                    /*  åˆå§‹åŒ–æ¸…é™¤å‡½æ•°              */
 
-    if (ioPrivateEnv() < 0) {                                           /*  Ê¹ÓÃË½ÓĞÏß³Ì io »·¾³        */
+    if (ioPrivateEnv() < 0) {                                           /*  ä½¿ç”¨ç§æœ‰çº¿ç¨‹ io ç¯å¢ƒ        */
         exit(-1);
     }
     
     if (iTtyFd >= 0) {
         LW_OBJECT_HANDLE  ulMe = API_ThreadIdSelf();
-        API_IoTaskStdSet(ulMe, STD_IN,  iTtyFd);                        /*  I/O ÖØ¶¨Ïò                  */
+        API_IoTaskStdSet(ulMe, STD_IN,  iTtyFd);                        /*  I/O é‡å®šå‘                  */
         API_IoTaskStdSet(ulMe, STD_OUT, iTtyFd);
         API_IoTaskStdSet(ulMe, STD_ERR, iTtyFd);
     }
     
-    if (!isatty(iTtyFd)) {                                              /*  ¼ì²âÊÇ·ñÎªÖÕ¶ËÉè±¸          */
+    if (!isatty(iTtyFd)) {                                              /*  æ£€æµ‹æ˜¯å¦ä¸ºç»ˆç«¯è®¾å¤‡          */
         exit(-1);
     }
     
-    ioctl(iTtyFd, FIOSYNC);                                             /*  µÈ´ıÖ®Ç°ËùÓĞÊı¾İ·¢ËÍÍê±Ï    */
-    ioctl(iTtyFd, FIORTIMEOUT, LW_NULL);                                /*  ¶ÁÈ¡ÎŞ³¬Ê±Ê±¼ä              */
+    ioctl(iTtyFd, FIOSYNC);                                             /*  ç­‰å¾…ä¹‹å‰æ‰€æœ‰æ•°æ®å‘é€å®Œæ¯•    */
+    ioctl(iTtyFd, FIORTIMEOUT, LW_NULL);                                /*  è¯»å–æ— è¶…æ—¶æ—¶é—´              */
     
-    if (__TTINY_SHELL_GET_OPT(ptcbCur) & LW_OPTION_TSHELL_AUTHEN) {     /*  ÊÇ·ñĞèÒªÃ÷ÎÄÓÃ»§ÈÏÖ¤        */
+    if (__TTINY_SHELL_GET_OPT(ptcbCur) & LW_OPTION_TSHELL_AUTHEN) {     /*  æ˜¯å¦éœ€è¦æ˜æ–‡ç”¨æˆ·è®¤è¯        */
         if (__TTINY_SHELL_GET_OPT(ptcbCur) & LW_OPTION_TSHELL_LOOPLOGIN) {
 __reauthen:
-            if (__tshellUserAuthen(iTtyFd, LW_TRUE)) {                  /*  ½øĞĞÈÏÖ¤                    */
+            if (__tshellUserAuthen(iTtyFd, LW_TRUE)) {                  /*  è¿›è¡Œè®¤è¯                    */
                 goto    __reauthen;
             }
         } else {
-            if (__tshellUserAuthen(iTtyFd, LW_FALSE)) {                 /*  ½øĞĞÈÏÖ¤                    */
+            if (__tshellUserAuthen(iTtyFd, LW_FALSE)) {                 /*  è¿›è¡Œè®¤è¯                    */
                 exit(-ERROR_TSHELL_EUSER);
             }
         }
@@ -1268,21 +1268,21 @@ __reauthen:
         printf("\n");
     }
     
-    if (API_TShellGetUserHome(getuid(),                                 /*  ÇĞ»»µ±Ç°¹¤×÷Ä¿Â¼            */
+    if (API_TShellGetUserHome(getuid(),                                 /*  åˆ‡æ¢å½“å‰å·¥ä½œç›®å½•            */
                               cRecvBuffer,
                               LW_CFG_SHELL_MAX_COMMANDLEN + 1) == ERROR_NONE) {
         if (chdir(cRecvBuffer) < ERROR_NONE) {
             chdir(PX_STR_ROOT);
         }
     } else {
-        chdir(PX_STR_ROOT);                                             /*  ³õÊ¼»¯Îª¸ùÄ¿Â¼              */
+        chdir(PX_STR_ROOT);                                             /*  åˆå§‹åŒ–ä¸ºæ ¹ç›®å½•              */
     }
 
-    if (__TTINY_SHELL_GET_OPT(ptcbCur) & LW_OPTION_TSHELL_NOECHO) {     /*  ²»ĞèÒª»ØÏÔ                  */
+    if (__TTINY_SHELL_GET_OPT(ptcbCur) & LW_OPTION_TSHELL_NOECHO) {     /*  ä¸éœ€è¦å›æ˜¾                  */
         iRetValue = ioctl(iTtyFd, FIOSETOPTIONS, 
-                          (OPT_TERMINAL & (~OPT_ECHO)));                /*  ÉèÖÃÎªÖÕ¶ËÄ£Ê½              */
+                          (OPT_TERMINAL & (~OPT_ECHO)));                /*  è®¾ç½®ä¸ºç»ˆç«¯æ¨¡å¼              */
     } else {
-        iRetValue = ioctl(iTtyFd, FIOSETOPTIONS, OPT_TERMINAL);         /*  ÉèÖÃÎªÖÕ¶ËÄ£Ê½              */
+        iRetValue = ioctl(iTtyFd, FIOSETOPTIONS, OPT_TERMINAL);         /*  è®¾ç½®ä¸ºç»ˆç«¯æ¨¡å¼              */
     }
     if (iRetValue < 0) {
         perror("shell can not change into a TERMINAL mode");
@@ -1290,25 +1290,25 @@ __reauthen:
     }
     
     iRetValue = ioctl(iTtyFd, FIORBUFSET, 
-                      LW_OSIOD_LARG(LW_CFG_SHELL_MAX_COMMANDLEN + 2));  /*  ÉèÖÃ½ÓÊÕ»º³åÇø´óĞ¡          */
-                                                                        /*  Îª ty ¼ÆÊıÆ÷±£Áô 2 ×Ö½Ú¿Õ¼ä */
+                      LW_OSIOD_LARG(LW_CFG_SHELL_MAX_COMMANDLEN + 2));  /*  è®¾ç½®æ¥æ”¶ç¼“å†²åŒºå¤§å°          */
+                                                                        /*  ä¸º ty è®¡æ•°å™¨ä¿ç•™ 2 å­—èŠ‚ç©ºé—´ */
     if (iRetValue < 0) {
         perror("shell can not change set read buffer size");
         exit(-1);
     }
     
     iRetValue = ioctl(iTtyFd, FIOWBUFSET, 
-                      LW_OSIOD_LARG(LW_CFG_SHELL_MAX_COMMANDLEN));      /*  ÉèÖÃ·¢ËÍ»º³å                */
+                      LW_OSIOD_LARG(LW_CFG_SHELL_MAX_COMMANDLEN));      /*  è®¾ç½®å‘é€ç¼“å†²                */
     if (iRetValue < 0) {
         perror("shell can not change set write buffer size");
         exit(-1);
     }
     
-    API_TShellSetTitle(STD_OUT, "SylixOS Terminal");                    /*  ĞŞ¸Ä±êÌâÉèÖÃ                */
+    API_TShellSetTitle(STD_OUT, "SylixOS Terminal");                    /*  ä¿®æ”¹æ ‡é¢˜è®¾ç½®                */
     API_TShellColorEnd(STD_OUT);
 
     pfuncRunCallback = __TTINY_SHELL_GET_CALLBACK(ptcbCur);
-    if (pfuncRunCallback) {                                             /*  µ÷ÓÃÆô¶¯»Øµ÷º¯Êı            */
+    if (pfuncRunCallback) {                                             /*  è°ƒç”¨å¯åŠ¨å›è°ƒå‡½æ•°            */
         iRetValue = pfuncRunCallback(iTtyFd, __TTINY_SHELL_GET_CBARG(ptcbCur));
         if (iRetValue < 0) {
             perror("shell run callback fail");
@@ -1317,12 +1317,12 @@ __reauthen:
     }
     
     if ((__TTINY_SHELL_GET_OPT(ptcbCur) & 
-         LW_OPTION_TSHELL_NOLOGO) == 0) {                               /*  ÊÇ·ñĞèÒª´òÓ¡ logo           */
-        API_SystemLogoPrint();                                          /*  ´òÓ¡ LOGO ĞÅÏ¢              */
+         LW_OPTION_TSHELL_NOLOGO) == 0) {                               /*  æ˜¯å¦éœ€è¦æ‰“å° logo           */
+        API_SystemLogoPrint();                                          /*  æ‰“å° LOGO ä¿¡æ¯              */
         API_SystemHwInfoPrint();
     }
     
-    __TTINY_SHELL_SET_ERROR(ptcbCur, 0);                                /*  Çå¿Õ´íÎó±ê¼Ç                */
+    __TTINY_SHELL_SET_ERROR(ptcbCur, 0);                                /*  æ¸…ç©ºé”™è¯¯æ ‡è®°                */
     
 #if LW_CFG_THREAD_CANCEL_EN > 0
     API_ThreadSetCancelType(LW_THREAD_CANCEL_ASYNCHRONOUS, LW_NULL);
@@ -1330,61 +1330,61 @@ __reauthen:
     
     __TTINY_SHELL_SET_MAIN(ptcbCur);
     
-    ioctl(iTtyFd, FIOABORTARG,  API_ThreadIdSelf());                    /*  control-C ²ÎÊı              */
-    ioctl(iTtyFd, FIOABORTFUNC, __tshellRestart);                       /*  control-C ĞĞÎª              */
-    ioctl(iTtyFd, FIOGETCC, cCtrl);                                     /*  »ñµÃ¿ØÖÆ×Ö·û                */
+    ioctl(iTtyFd, FIOABORTARG,  API_ThreadIdSelf());                    /*  control-C å‚æ•°              */
+    ioctl(iTtyFd, FIOABORTFUNC, __tshellRestart);                       /*  control-C è¡Œä¸º              */
+    ioctl(iTtyFd, FIOGETCC, cCtrl);                                     /*  è·å¾—æ§åˆ¶å­—ç¬¦                */
     
     for (;;) {
-        if (bIsCommandOver) {                                           /*  µ¥ÌõÃüÁî½áÊøºó·¢ËÍÃüÁîÌáÊ¾·û*/
-            __tshellShowPrompt();                                       /*  ÏÔÊ¾ÃüÁîÌáÊ¾·û              */
+        if (bIsCommandOver) {                                           /*  å•æ¡å‘½ä»¤ç»“æŸåå‘é€å‘½ä»¤æç¤ºç¬¦*/
+            __tshellShowPrompt();                                       /*  æ˜¾ç¤ºå‘½ä»¤æç¤ºç¬¦              */
         
         } else {
-            printf(">");                                                /*  Á´½ÓÃüÁî·û                  */
-            fflush(stdout);                                             /*  ±£Ö¤ stdout µÄÊä³ö          */
+            printf(">");                                                /*  é“¾æ¥å‘½ä»¤ç¬¦                  */
+            fflush(stdout);                                             /*  ä¿è¯ stdout çš„è¾“å‡º          */
         }
         
         if (__TTINY_SHELL_GET_OPT(ptcbCur) & LW_OPTION_TSHELL_NOECHO) {
             iReadNum = (INT)read(0, &cRecvBuffer[iTotalNum], 
                                  LW_CFG_SHELL_MAX_COMMANDLEN - 
-                                 iTotalNum);                            /*  ½ÓÊÕ×Ö·û´®                  */
+                                 iTotalNum);                            /*  æ¥æ”¶å­—ç¬¦ä¸²                  */
         } else {
             iReadNum = (INT)__tshellReadline(0, &cRecvBuffer[iTotalNum], 
                                              LW_CFG_SHELL_MAX_COMMANDLEN - 
-                                             iTotalNum);                /*  ½ÓÊÕ×Ö·û´®                  */
+                                             iTotalNum);                /*  æ¥æ”¶å­—ç¬¦ä¸²                  */
         }
         
         if (iReadNum > 0) {
-            iTotalNum += iReadNum;                                      /*  ¼ÇÂ¼×Ü¸öÊı                  */
+            iTotalNum += iReadNum;                                      /*  è®°å½•æ€»ä¸ªæ•°                  */
             if (cRecvBuffer[iTotalNum - 1] == '\n') {
                 cRecvBuffer[iTotalNum - 1] =  PX_EOS;
                 iTotalNum -= 1;
-                if (cRecvBuffer[iTotalNum - 1] == '\r') {               /*  ¹ıÂË \r\n                   */
+                if (cRecvBuffer[iTotalNum - 1] == '\r') {               /*  è¿‡æ»¤ \r\n                   */
                     cRecvBuffer[iTotalNum - 1] =  PX_EOS;
                     iTotalNum -= 1;
                 }
             }
-            if (cRecvBuffer[iTotalNum - 1] == '\\') {                   /*  ÓÃ»§ĞèÒªĞøĞ´ÃüÁî            */
+            if (cRecvBuffer[iTotalNum - 1] == '\\') {                   /*  ç”¨æˆ·éœ€è¦ç»­å†™å‘½ä»¤            */
                 iTotalNum -= 1;
                 bIsCommandOver = LW_FALSE;
-                if ((LW_CFG_SHELL_MAX_COMMANDLEN - iTotalNum) <= 1) {   /*  Ã»ÓĞ¿ÕÏĞ, ²»ÄÜ½ÓÊÕ          */
+                if ((LW_CFG_SHELL_MAX_COMMANDLEN - iTotalNum) <= 1) {   /*  æ²¡æœ‰ç©ºé—², ä¸èƒ½æ¥æ”¶          */
                     printf("command is too long.\n");
-                    iTotalNum      = 0;                                 /*  ¸ÃÃüÁîÊ§Ğ§                  */
+                    iTotalNum      = 0;                                 /*  è¯¥å‘½ä»¤å¤±æ•ˆ                  */
                     bIsCommandOver = LW_TRUE;
                 } else {
-                    continue;                                           /*  µÈ´ı¼ÌĞøÊäÈë                */
+                    continue;                                           /*  ç­‰å¾…ç»§ç»­è¾“å…¥                */
                 }
             }
         }
         
         if (iTotalNum > 0) {
             if (lib_strstr(cRecvBuffer, __TTINY_SHELL_FORCE_ABORT)) {
-                break;                                                  /*  Ç¿ÖÆÍË³ö shell              */
+                break;                                                  /*  å¼ºåˆ¶é€€å‡º shell              */
             }
             
-            optind   = 1;                                               /*  È·±£ getopt() Ö´ĞĞÕıÈ·      */
+            optind   = 1;                                               /*  ç¡®ä¿ getopt() æ‰§è¡Œæ­£ç¡®      */
             optreset = 1;
             
-            iRetValue = API_TShellExec(cRecvBuffer);                    /*  Ö´ĞĞ shell Ö¸Áî             */
+            iRetValue = API_TShellExec(cRecvBuffer);                    /*  æ‰§è¡Œ shell æŒ‡ä»¤             */
 
 #if LW_CFG_SHELL_HOOK_EN > 0
             if ((iRetValue == -ERROR_TSHELL_CMDNOTFUND) && _G_pfuncShellHook) {
@@ -1394,7 +1394,7 @@ __reauthen:
 #endif                                                                  /*  LW_CFG_SHELL_HOOK_EN > 0    */
 
             if (iRetValue < 0) {
-                switch (iRetValue) {                                    /*  ÏµÍ³¼¶´íÎóÌáÊ¾              */
+                switch (iRetValue) {                                    /*  ç³»ç»Ÿçº§é”™è¯¯æç¤º              */
                 
                 case -ERROR_TSHELL_EPARAM:
                     fprintf(stderr, "parameter(s) error.\n");
@@ -1413,20 +1413,20 @@ __reauthen:
                     break;
                 }
                 
-                API_TShellTermAlert(STD_OUT);                           /*  ²úÉúÏìÁå                    */
+                API_TShellTermAlert(STD_OUT);                           /*  äº§ç”Ÿå“é“ƒ                    */
             }
-            __TTINY_SHELL_SET_ERROR(ptcbCur, iRetValue);                /*  ¼ÇÂ¼µ±Ç°ÃüÁî²úÉúµÄ´íÎó.     */
+            __TTINY_SHELL_SET_ERROR(ptcbCur, iRetValue);                /*  è®°å½•å½“å‰å‘½ä»¤äº§ç”Ÿçš„é”™è¯¯.     */
 
-            fpurge(stdin);                                              /*  Çå¿ÕÊäÈë»º´æ                */
+            fpurge(stdin);                                              /*  æ¸…ç©ºè¾“å…¥ç¼“å­˜                */
 
             if (__TTINY_SHELL_GET_OPT(ptcbCur) & LW_OPTION_TSHELL_NOECHO) {
                 ioctl(iTtyFd, FIOSETOPTIONS, (OPT_TERMINAL & (~OPT_ECHO)));
                 
-            } else {                                                    /*  ÖØĞÂ»Ö¸´ÎªĞĞÄ£Ê½            */
+            } else {                                                    /*  é‡æ–°æ¢å¤ä¸ºè¡Œæ¨¡å¼            */
                 ioctl(iTtyFd, FIOSETOPTIONS, OPT_TERMINAL);
             }
             
-            ioctl(iTtyFd, FIOSETCC, cCtrl);                             /*  »Ö¸´Ö®Ç°µÄ¿ØÖÆ×Ö·û          */
+            ioctl(iTtyFd, FIOSETCC, cCtrl);                             /*  æ¢å¤ä¹‹å‰çš„æ§åˆ¶å­—ç¬¦          */
         }
         
         iTotalNum      = 0;
@@ -1436,31 +1436,31 @@ __reauthen:
     return  (LW_NULL);
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellKeywordAdd
-** ¹¦ÄÜÃèÊö: Ïò ttiny shell ÏµÍ³Ìí¼ÓÒ»¸ö¹Ø¼ü×Ö.
-** Êä¡¡Èë  : pcKeyword     ¹Ø¼ü×Ö
-**           stStrLen      ¹Ø¼ü×ÖµÄ³¤¶È
-**           pfuncCommand  Ö´ĞĞµÄ shell º¯Êı
-**           ulOption      Ñ¡Ïî
-** Êä¡¡³ö  : ´íÎó´úÂë.
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellKeywordAdd
+** åŠŸèƒ½æè¿°: å‘ ttiny shell ç³»ç»Ÿæ·»åŠ ä¸€ä¸ªå…³é”®å­—.
+** è¾“ã€€å…¥  : pcKeyword     å…³é”®å­—
+**           stStrLen      å…³é”®å­—çš„é•¿åº¦
+**           pfuncCommand  æ‰§è¡Œçš„ shell å‡½æ•°
+**           ulOption      é€‰é¡¹
+** è¾“ã€€å‡º  : é”™è¯¯ä»£ç .
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 ULONG  __tshellKeywordAdd (CPCHAR  pcKeyword, size_t  stStrLen, 
                            PCOMMAND_START_ROUTINE  pfuncCommand, ULONG   ulOption)
 {
-    REGISTER __PTSHELL_KEYWORD    pskwNode         = LW_NULL;           /*  ¹Ø¼ü×Ö½Úµã                  */
+    REGISTER __PTSHELL_KEYWORD    pskwNode         = LW_NULL;           /*  å…³é”®å­—èŠ‚ç‚¹                  */
     REGISTER PLW_LIST_LINE       *pplineHashHeader = LW_NULL;
     REGISTER INT                  iHashVal;
     
     /*
-     *  ·ÖÅäÄÚ´æ
+     *  åˆ†é…å†…å­˜
      */
     pskwNode = (__PTSHELL_KEYWORD)__SHEAP_ALLOC(sizeof(__TSHELL_KEYWORD));
-    if (!pskwNode) {                                                    /*  ·ÖÅäÊ§°Ü                    */
+    if (!pskwNode) {                                                    /*  åˆ†é…å¤±è´¥                    */
         _DebugHandle(__ERRORMESSAGE_LEVEL, "system low memory.\r\n");
         _ErrorHandle(ERROR_SYSTEM_LOW_MEMORY);
-        return  (ERROR_SYSTEM_LOW_MEMORY);                              /*  È±ÉÙÄÚ´æ                    */
+        return  (ERROR_SYSTEM_LOW_MEMORY);                              /*  ç¼ºå°‘å†…å­˜                    */
     }
     
     pskwNode->SK_pcKeyword = (PCHAR)__SHEAP_ALLOC(stStrLen + 1);
@@ -1468,92 +1468,92 @@ ULONG  __tshellKeywordAdd (CPCHAR  pcKeyword, size_t  stStrLen,
         __SHEAP_FREE(pskwNode);
         _DebugHandle(__ERRORMESSAGE_LEVEL, "system low memory.\r\n");
         _ErrorHandle(ERROR_SYSTEM_LOW_MEMORY);
-        return  (ERROR_SYSTEM_LOW_MEMORY);                              /*  È±ÉÙÄÚ´æ                    */
+        return  (ERROR_SYSTEM_LOW_MEMORY);                              /*  ç¼ºå°‘å†…å­˜                    */
     }
     
-    iHashVal = __hashHorner(pcKeyword, LW_CFG_SHELL_KEY_HASH_SIZE);     /*  È·¶¨Ò»½×É¢ÁĞµÄÎ»ÖÃ          */
+    iHashVal = __hashHorner(pcKeyword, LW_CFG_SHELL_KEY_HASH_SIZE);     /*  ç¡®å®šä¸€é˜¶æ•£åˆ—çš„ä½ç½®          */
     
-    __TTINY_SHELL_LOCK();                                               /*  »¥³â·ÃÎÊ                    */
+    __TTINY_SHELL_LOCK();                                               /*  äº’æ–¥è®¿é—®                    */
     /*
-     *  ÌîĞ´ĞÅÏ¢
+     *  å¡«å†™ä¿¡æ¯
      */
-    pskwNode->SK_pfuncCommand   = pfuncCommand;                         /*  ¼ÇÂ¼»Øµ÷º¯Êı                */
-    pskwNode->SK_ulOption       = ulOption;                             /*  ¼ÇÂ¼ÃüÁîÑ¡Ïî                */
-    pskwNode->SK_pcFormatString = LW_NULL;                              /*  ¸ñÊ½»¯×Ö´®                  */
-    pskwNode->SK_pcHelpString   = LW_NULL;                              /*  °ïÖú×Ö¶Î                    */
+    pskwNode->SK_pfuncCommand   = pfuncCommand;                         /*  è®°å½•å›è°ƒå‡½æ•°                */
+    pskwNode->SK_ulOption       = ulOption;                             /*  è®°å½•å‘½ä»¤é€‰é¡¹                */
+    pskwNode->SK_pcFormatString = LW_NULL;                              /*  æ ¼å¼åŒ–å­—ä¸²                  */
+    pskwNode->SK_pcHelpString   = LW_NULL;                              /*  å¸®åŠ©å­—æ®µ                    */
     lib_strlcpy(pskwNode->SK_pcKeyword, pcKeyword, 
-                (LW_CFG_SHELL_MAX_KEYWORDLEN + 1));                     /*  ¸´ÖÆ¹Ø¼ü×Ö                  */
+                (LW_CFG_SHELL_MAX_KEYWORDLEN + 1));                     /*  å¤åˆ¶å…³é”®å­—                  */
 
     /*
-     *  ²åÈë¹ÜÀíÁ´±í
+     *  æ’å…¥ç®¡ç†é“¾è¡¨
      */
     _List_Line_Add_Ahead(&pskwNode->SK_lineManage, 
-                         &_G_plineTSKeyHeader);                         /*  ²åÈë¹ÜÀí±íÍ·                */
+                         &_G_plineTSKeyHeader);                         /*  æ’å…¥ç®¡ç†è¡¨å¤´                */
      
     /*
-     *  ²åÈë¹şÏ£±í
+     *  æ’å…¥å“ˆå¸Œè¡¨
      */
     pplineHashHeader = &_G_plineTSKeyHeaderHashTbl[iHashVal];
     
     _List_Line_Add_Ahead(&pskwNode->SK_lineHash, 
-                         pplineHashHeader);                             /*  ²åÈëÏàÓ¦µÄ±í                */
+                         pplineHashHeader);                             /*  æ’å…¥ç›¸åº”çš„è¡¨                */
     
-    __TTINY_SHELL_UNLOCK();                                             /*  ÊÍ·Å×ÊÔ´                    */
+    __TTINY_SHELL_UNLOCK();                                             /*  é‡Šæ”¾èµ„æº                    */
     
     return  (ERROR_NONE);
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellKeywordFine
-** ¹¦ÄÜÃèÊö: ÔÚ ttiny shell ÏµÍ³²éÕÒÒ»¸ö¹Ø¼ü×Ö.
-** Êä¡¡Èë  : pcKeyword     ¹Ø¼ü×Ö
-**           ppskwNode     ¹Ø¼ü×Ö½ÚµãË«Ö¸Õë
-** Êä¡¡³ö  : 0: ±íÊ¾Ö´ĞĞ³É¹¦ -1: ±íÊ¾Ö´ĞĞÊ§°Ü
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellKeywordFine
+** åŠŸèƒ½æè¿°: åœ¨ ttiny shell ç³»ç»ŸæŸ¥æ‰¾ä¸€ä¸ªå…³é”®å­—.
+** è¾“ã€€å…¥  : pcKeyword     å…³é”®å­—
+**           ppskwNode     å…³é”®å­—èŠ‚ç‚¹åŒæŒ‡é’ˆ
+** è¾“ã€€å‡º  : 0: è¡¨ç¤ºæ‰§è¡ŒæˆåŠŸ -1: è¡¨ç¤ºæ‰§è¡Œå¤±è´¥
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 ULONG  __tshellKeywordFind (CPCHAR  pcKeyword, __PTSHELL_KEYWORD   *ppskwNode)
 {
     REGISTER PLW_LIST_LINE        plineHash;
-    REGISTER __PTSHELL_KEYWORD    pskwNode = LW_NULL;                   /*  ¹Ø¼ü×Ö½Úµã                  */
+    REGISTER __PTSHELL_KEYWORD    pskwNode = LW_NULL;                   /*  å…³é”®å­—èŠ‚ç‚¹                  */
     REGISTER INT                  iHashVal;
 
-    iHashVal = __hashHorner(pcKeyword, LW_CFG_SHELL_KEY_HASH_SIZE);     /*  È·¶¨Ò»½×É¢ÁĞµÄÎ»ÖÃ          */
+    iHashVal = __hashHorner(pcKeyword, LW_CFG_SHELL_KEY_HASH_SIZE);     /*  ç¡®å®šä¸€é˜¶æ•£åˆ—çš„ä½ç½®          */
     
-    __TTINY_SHELL_LOCK();                                               /*  »¥³â·ÃÎÊ                    */
+    __TTINY_SHELL_LOCK();                                               /*  äº’æ–¥è®¿é—®                    */
     plineHash = _G_plineTSKeyHeaderHashTbl[iHashVal];
     for (;
          plineHash != LW_NULL;
          plineHash  = _list_line_get_next(plineHash)) {
         
         pskwNode = _LIST_ENTRY(plineHash, __TSHELL_KEYWORD, 
-                               SK_lineHash);                            /*  »ñµÃ¿ØÖÆ¿é                  */
+                               SK_lineHash);                            /*  è·å¾—æ§åˆ¶å—                  */
         
-        if (lib_strcmp(pcKeyword, pskwNode->SK_pcKeyword) == 0) {       /*  ¹Ø¼ü×ÖÏàÍ¬                  */
+        if (lib_strcmp(pcKeyword, pskwNode->SK_pcKeyword) == 0) {       /*  å…³é”®å­—ç›¸åŒ                  */
             break;
         }
     }
 
     if (plineHash == LW_NULL) {
-        __TTINY_SHELL_UNLOCK();                                         /*  ÊÍ·Å×ÊÔ´                    */
+        __TTINY_SHELL_UNLOCK();                                         /*  é‡Šæ”¾èµ„æº                    */
         _ErrorHandle(ERROR_TSHELL_EKEYWORD);
-        return  (ERROR_TSHELL_EKEYWORD);                                /*  Ã»ÓĞÕÒµ½¹Ø¼ü×Ö              */
+        return  (ERROR_TSHELL_EKEYWORD);                                /*  æ²¡æœ‰æ‰¾åˆ°å…³é”®å­—              */
     }
 
     *ppskwNode = pskwNode;
 
-    __TTINY_SHELL_UNLOCK();                                             /*  ÊÍ·Å×ÊÔ´                    */
+    __TTINY_SHELL_UNLOCK();                                             /*  é‡Šæ”¾èµ„æº                    */
     
     return  (ERROR_NONE);
 }
 
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellCmdMatchFull
-** ¹¦ÄÜÃèÊö: ÔÚ ttiny shell ÏµÍ³²éÕÒÒ»¸ö¹Ø¼ü×Ö£¬Èç¹û´æÔÚÔòÊä³ö²ÎÊıÁĞ±í.
-** Êä¡¡Èë  : pcKeyword     ¹Ø¼ü×Ö
-**           ppskwNode     ¹Ø¼ü×Ö½ÚµãË«Ö¸Õë
-** Êä¡¡³ö  : 0: ±íÊ¾Ö´ĞĞ³É¹¦ -1: ±íÊ¾Ö´ĞĞÊ§°Ü
-** È«¾Ö±äÁ¿:
-** µ÷ÓÃÄ£¿é:
+** å‡½æ•°åç§°: __tshellCmdMatchFull
+** åŠŸèƒ½æè¿°: åœ¨ ttiny shell ç³»ç»ŸæŸ¥æ‰¾ä¸€ä¸ªå…³é”®å­—ï¼Œå¦‚æœå­˜åœ¨åˆ™è¾“å‡ºå‚æ•°åˆ—è¡¨.
+** è¾“ã€€å…¥  : pcKeyword     å…³é”®å­—
+**           ppskwNode     å…³é”®å­—èŠ‚ç‚¹åŒæŒ‡é’ˆ
+** è¾“ã€€å‡º  : 0: è¡¨ç¤ºæ‰§è¡ŒæˆåŠŸ -1: è¡¨ç¤ºæ‰§è¡Œå¤±è´¥
+** å…¨å±€å˜é‡:
+** è°ƒç”¨æ¨¡å—:
 *********************************************************************************************************/
 ULONG __tshellCmdMatchFull(INT iFd, CPCHAR  pcKeyword, __PTSHELL_KEYWORD   *ppskwNode) {
     __PTSHELL_KEYWORD   pskwNode = LW_NULL;
@@ -1572,18 +1572,18 @@ ULONG __tshellCmdMatchFull(INT iFd, CPCHAR  pcKeyword, __PTSHELL_KEYWORD   *ppsk
     printf("\n");
     API_TShellColorEnd(STD_OUT);
 
-    __tshellShowPrompt();    // ½áÊøstdout£¬ÇĞ»»ĞÂµÄÃüÁîĞĞÌáÊ¾·û
+    __tshellShowPrompt();    // ç»“æŸstdoutï¼Œåˆ‡æ¢æ–°çš„å‘½ä»¤è¡Œæç¤ºç¬¦
 
     return  (ERROR_NONE);
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellCmdMatchPart
-** ¹¦ÄÜÃèÊö: ÔÚ ttiny shell ÏµÍ³²éÕÒÒ»¸ö²»ÍêÕûµÄ¹Ø¼ü×Ö£¬Èç¹û´æÔÚÔòÊä³ö¹Ø¼ü×ÖºÍ²ÎÊıÁĞ±í.
-** Êä¡¡Èë  : pcKeyword     ¹Ø¼ü×Ö
-**           pskwNode     ¹Ø¼ü×ÖÊı×é
-** Êä¡¡³ö  : Æ¥Åäµ½µÄ¹Ø¼ü×ÖÊıÁ¿
-** È«¾Ö±äÁ¿:
-** µ÷ÓÃÄ£¿é:
+** å‡½æ•°åç§°: __tshellCmdMatchPart
+** åŠŸèƒ½æè¿°: åœ¨ ttiny shell ç³»ç»ŸæŸ¥æ‰¾ä¸€ä¸ªä¸å®Œæ•´çš„å…³é”®å­—ï¼Œå¦‚æœå­˜åœ¨åˆ™è¾“å‡ºå…³é”®å­—å’Œå‚æ•°åˆ—è¡¨.
+** è¾“ã€€å…¥  : pcKeyword     å…³é”®å­—
+**           pskwNode     å…³é”®å­—æ•°ç»„
+** è¾“ã€€å‡º  : åŒ¹é…åˆ°çš„å…³é”®å­—æ•°é‡
+** å…¨å±€å˜é‡:
+** è°ƒç”¨æ¨¡å—:
 *********************************************************************************************************/
 VOID __tshellCmdMatchPart(INT iFd, CPCHAR  pcKey, __PTSHELL_KEYWORD pskwNode[])
 {
@@ -1599,9 +1599,9 @@ VOID __tshellCmdMatchPart(INT iFd, CPCHAR  pcKey, __PTSHELL_KEYWORD pskwNode[])
     INT j = 0;
     do {
         ulGetNum = __tshellKeywordList(pskwNodeStart,pskwNode, 1);
-        //fnmatchÓÃ²»¶Ô£¬Ğ´ÁË¸ö±©Á¦Æ¥Åä
+        //fnmatchç”¨ä¸å¯¹ï¼Œå†™äº†ä¸ªæš´åŠ›åŒ¹é…
         if (ulGetNum) {
-            //×Ö·û´®³¤¶È
+            //å­—ç¬¦ä¸²é•¿åº¦
             for (i=0; i<100; i++){
                 if (pcKey[i] == '\0'){
                     klen = i;
@@ -1614,7 +1614,7 @@ VOID __tshellCmdMatchPart(INT iFd, CPCHAR  pcKey, __PTSHELL_KEYWORD pskwNode[])
                      break;
                 }
            }
-            //±©Á¦Æ¥Åä
+            //æš´åŠ›åŒ¹é…
             if (klen <= wlen){
                 INT j = 0;
                 i = 0;
@@ -1626,6 +1626,7 @@ VOID __tshellCmdMatchPart(INT iFd, CPCHAR  pcKey, __PTSHELL_KEYWORD pskwNode[])
                     else{
                         i = i - j + 1;
                         j = 0;
+                        break;
                     }
                 }
                 if (j == klen){
@@ -1643,24 +1644,24 @@ VOID __tshellCmdMatchPart(INT iFd, CPCHAR  pcKey, __PTSHELL_KEYWORD pskwNode[])
     write(iFd, cStat, stCatLen);
     return;
 }
-//SysCmd.cÀïÃæµÄhelpPrintKeyword()
+//SysCmd.cé‡Œé¢çš„helpPrintKeyword()
 INT  __helpPrint (__PTSHELL_KEYWORD  pskwNode, BOOL  bDetails)
     {
         INT   iChars = 0;
 
         if (bDetails && pskwNode->SK_pcHelpString) {
-            iChars += fprintf(stderr, "%s", pskwNode->SK_pcHelpString);              /*  ´òÓ¡°ïÖúĞÅÏ¢                */
+            iChars += fprintf(stderr, "%s", pskwNode->SK_pcHelpString);              /*  æ‰“å°å¸®åŠ©ä¿¡æ¯                */
         }
 
         if (bDetails) {
-            iChars += fprintf(stderr, "%s", pskwNode->SK_pcKeyword);                 /*  ´òÓ¡¹Ø¼ü×Ö¶ÓÁĞ              */
+            iChars += fprintf(stderr, "%s", pskwNode->SK_pcKeyword);                 /*  æ‰“å°å…³é”®å­—é˜Ÿåˆ—              */
         } else {
             iChars += fprintf(stderr, "%-20s", pskwNode->SK_pcKeyword);
         }
 
         if (pskwNode->SK_pcFormatString) {
             API_TShellColorStart2(LW_TSHELL_COLOR_GREEN, STD_OUT);
-            iChars += printf("%s", pskwNode->SK_pcFormatString);            /*  ´òÓ¡¸ñÊ½ĞÅÏ¢                */
+            iChars += printf("%s", pskwNode->SK_pcFormatString);            /*  æ‰“å°æ ¼å¼ä¿¡æ¯                */
             API_TShellColorEnd(STD_OUT);
         }
 
@@ -1669,14 +1670,14 @@ INT  __helpPrint (__PTSHELL_KEYWORD  pskwNode, BOOL  bDetails)
         return  (iChars);
 }
 /*********************************************************************************************************
-** º¯ÊıÃû³Æ: __tshellKeywordList
-** ¹¦ÄÜÃèÊö: »ñµÃÁ´±íÖĞµÄËùÓĞ¹Ø¼ü×Ö¿ØÖÆ¿éµØÖ·
-** Êä¡¡Èë  : pskwNodeStart   ÆğÊ¼½ÚµãµØÖ·, NULL ±íÊ¾´ÓÍ·¿ªÊ¼
-**           ppskwNode[]     ½ÚµãÁĞ±í
-**           iMaxCounter     ÁĞ±íÖĞ¿ÉÒÔ´æ·ÅµÄ×î´ó½ÚµãÊıÁ¿
-** Êä¡¡³ö  : ÕæÊµ»ñÈ¡µÄ½ÚµãÊıÁ¿
-** È«¾Ö±äÁ¿: 
-** µ÷ÓÃÄ£¿é: 
+** å‡½æ•°åç§°: __tshellKeywordList
+** åŠŸèƒ½æè¿°: è·å¾—é“¾è¡¨ä¸­çš„æ‰€æœ‰å…³é”®å­—æ§åˆ¶å—åœ°å€
+** è¾“ã€€å…¥  : pskwNodeStart   èµ·å§‹èŠ‚ç‚¹åœ°å€, NULL è¡¨ç¤ºä»å¤´å¼€å§‹
+**           ppskwNode[]     èŠ‚ç‚¹åˆ—è¡¨
+**           iMaxCounter     åˆ—è¡¨ä¸­å¯ä»¥å­˜æ”¾çš„æœ€å¤§èŠ‚ç‚¹æ•°é‡
+** è¾“ã€€å‡º  : çœŸå®è·å–çš„èŠ‚ç‚¹æ•°é‡
+** å…¨å±€å˜é‡: 
+** è°ƒç”¨æ¨¡å—: 
 *********************************************************************************************************/
 ULONG  __tshellKeywordList (__PTSHELL_KEYWORD   pskwNodeStart,
                             __PTSHELL_KEYWORD   ppskwNode[],
@@ -1685,9 +1686,9 @@ ULONG  __tshellKeywordList (__PTSHELL_KEYWORD   pskwNodeStart,
     REGISTER INT                  i = 0;
     
     REGISTER PLW_LIST_LINE        plineNode;
-    REGISTER __PTSHELL_KEYWORD    pskwNode = pskwNodeStart;             /*  ¹Ø¼ü×Ö½Úµã                  */
+    REGISTER __PTSHELL_KEYWORD    pskwNode = pskwNodeStart;             /*  å…³é”®å­—èŠ‚ç‚¹                  */
     
-    __TTINY_SHELL_LOCK();                                               /*  »¥³â·ÃÎÊ                    */
+    __TTINY_SHELL_LOCK();                                               /*  äº’æ–¥è®¿é—®                    */
     if (pskwNode == LW_NULL) {
         plineNode = _G_plineTSKeyHeader;
     } else {
@@ -1696,18 +1697,18 @@ ULONG  __tshellKeywordList (__PTSHELL_KEYWORD   pskwNodeStart,
     
     for (;
          plineNode != LW_NULL;
-         plineNode  = _list_line_get_next(plineNode)) {                 /*  ¿ªÊ¼ËÑË÷                    */
+         plineNode  = _list_line_get_next(plineNode)) {                 /*  å¼€å§‹æœç´¢                    */
         
         pskwNode = _LIST_ENTRY(plineNode, __TSHELL_KEYWORD, 
-                               SK_lineManage);                          /*  »ñµÃ¿ØÖÆ¿é                  */
+                               SK_lineManage);                          /*  è·å¾—æ§åˆ¶å—                  */
         
-        ppskwNode[i++] = pskwNode;                                      /*  ±£´æ                        */
+        ppskwNode[i++] = pskwNode;                                      /*  ä¿å­˜                        */
         
-        if (i >= iMaxCounter) {                                         /*  ÒÑ¾­±£´æÂúÁË                */
+        if (i >= iMaxCounter) {                                         /*  å·²ç»ä¿å­˜æ»¡äº†                */
             break;
         }
     }
-    __TTINY_SHELL_UNLOCK();                                             /*  ÊÍ·Å×ÊÔ´                    */
+    __TTINY_SHELL_UNLOCK();                                             /*  é‡Šæ”¾èµ„æº                    */
     
     return  (i);
 }
